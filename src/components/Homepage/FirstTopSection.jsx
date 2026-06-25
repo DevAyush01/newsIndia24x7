@@ -19,12 +19,12 @@ export default async function FirstTopSection() {
           {latestPost && (
             <Link href={`/post/${latestPost.slug}`}>
               <article className="group cursor-pointer">
-                <div className="relative w-full aspect-5/4 overflow-hidden rounded-md bg-gray-200 shadow">
+                <div className="relative w-full aspect-3/2 overflow-hidden rounded-md bg-gray-200 shadow">
                   <Image
                     src={latestPost.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                     alt={latestPost.title}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-fill transition-transform duration-500 group-hover:scale-105"
                     priority
                   />
                   {latestPost.categories?.nodes?.[0] && (
@@ -58,7 +58,7 @@ export default async function FirstTopSection() {
                       src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                       alt={post.title}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="object-fill transition-transform duration-300 group-hover:scale-105"
                     />
                   </div>
                   <h3 className="mt-1.5 text-xs font-semibold leading-snug text-gray-800 group-hover:text-red-600 line-clamp-2">
@@ -97,12 +97,12 @@ export default async function FirstTopSection() {
             {superfastNews[0] && (
               <Link href={`/post/${superfastNews[0].slug}`}>
                 <article className="group">
-                  <div className="relative w-full h-[160px] overflow-hidden bg-gray-100">
+                  <div className="relative w-full h-[180px] overflow-hidden bg-gray-100">
                     <Image
                       src={superfastNews[0].featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                       alt={superfastNews[0].title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                      className="object-fill transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
                   </div>

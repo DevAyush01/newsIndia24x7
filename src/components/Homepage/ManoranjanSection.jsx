@@ -131,7 +131,7 @@ export default async function ManoranjanSection() {
                         src={entertainmentPosts[0].featuredImage.node.sourceUrl}
                         alt={entertainmentPosts[0].title}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="object-fill transition-transform duration-500 group-hover:scale-105"
                         sizes="100vw"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>

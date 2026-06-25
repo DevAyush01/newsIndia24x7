@@ -1,4 +1,4 @@
-// components/Homepage/TrendingSection.jsx - ✅ Left Side 2 Column Design
+// components/Homepage/TrendingSection.jsx - ✅ Fixed with JavaScript Filter
 
 import Image from "next/image";
 import Link from "next/link";
@@ -6,10 +6,10 @@ import { graphqlQuery, getTrendingTags } from "@/lib/wordpress";
 
 async function getTrendingData() {
   try {
-    // ✅ Trending News Posts - Left Side
+    // ✅ Fetch all posts first
     const newsQuery = `
       query GetTrendingNews {
-        posts(first: 20, where: { orderby: { field: DATE, order: DESC } }) {
+        posts(first: 30, where: { orderby: { field: DATE, order: DESC } }) {
           nodes {
             id
             title
@@ -34,12 +34,19 @@ async function getTrendingData() {
     `;
 
     const newsRes = await graphqlQuery(newsQuery);
-    const newsPosts = newsRes?.data?.posts?.nodes || [];
+    const allPosts = newsRes?.data?.posts?.nodes || [];
+
+    // ✅ Filter out Video and Podcast categories (JavaScript)
+    const excludeSlugs = ['video', 'podcast'];
+    const filteredPosts = allPosts.filter(post => {
+      const categorySlugs = post.categories?.nodes?.map(cat => cat.slug.toLowerCase()) || [];
+      return !categorySlugs.some(slug => excludeSlugs.includes(slug));
+    });
 
     const tags = await getTrendingTags(20);
 
     return {
-      newsPosts: newsPosts,
+      newsPosts: filteredPosts,
       trendingTags: tags || [],
     };
   } catch (error) {
@@ -58,88 +65,25 @@ export default async function TrendingSection() {
     return null;
   }
 
-  // First post as featured (big)
-  const featuredPost = newsPosts[0] || null;
-  const remainingPosts = newsPosts.slice(1, 12);
+  // ✅ No featured post - all posts in grid
+  const allPosts = newsPosts.slice(0, 12);
 
   return (
     <section className="container max-w-7xl mx-auto py-6 px-4">
       <div className="flex flex-col lg:flex-row gap-6">
         
-        {/* LEFT SECTION - Trending News (60% width) */}
+        {/* LEFT SECTION - Trending News Grid (70% width) */}
         <div className="lg:w-[70%]">
-          {/* Header */}
-          <div className="flex justify-between items-center mb-4 pb-2 border-b-2 border-red-500">
-            <div className="flex items-center gap-2">
-              <div className="w-0 h-0 border-l-[8px] border-l-red-600 border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent"></div>
-              <h2 className="font-bold text-2xl">ट्रेंडिंग</h2>
-              <span className="text-[10px] font-semibold text-red-500 bg-red-50 px-2 py-0.5 rounded-full ml-1">
-                TRENDING NOW
-              </span>
-            </div>
-            <Link href="/latest" className="text-red-600 text-sm font-semibold hover:text-red-700 transition flex items-center gap-1 group">
-              और भी 
-              <span className="group-hover:translate-x-1 transition">→</span>
-            </Link>
-          </div>
+     
 
-          {/* ✅ 2 Column Grid Layout (Like Screenshot) */}
-          <div className="grid md:grid-cols-2 gap-4">
-            
-            {/* Large Featured Post - Full Width */}
-            {featuredPost && (
-              <div className="md:col-span-2 mb-2">
-                <Link href={`/post/${featuredPost.slug}`} className="group block">
-                  <div className="relative rounded-xl overflow-hidden bg-gray-900">
-                    <div className="relative h-[280px] md:h-[340px]">
-                      {featuredPost.featuredImage?.node?.sourceUrl ? (
-                        <>
-                          <Image
-                            src={featuredPost.featuredImage.node.sourceUrl}
-                            alt={featuredPost.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            sizes="100vw"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-                        </>
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-red-800 to-orange-700 flex items-center justify-center">
-                          <svg className="w-20 h-20 text-white/30" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
-                          </svg>
-                        </div>
-                      )}
-                      
-                      <div className="absolute top-4 left-4 z-10">
-                        <span className="bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-                          {featuredPost.categories?.nodes?.[0]?.name || 'Trending'}
-                        </span>
-                      </div>
-                      
-                      <div className="absolute bottom-0 left-0 right-0 p-5 z-10">
-                        <h3 className="text-white text-xl md:text-2xl font-bold leading-tight line-clamp-2 drop-shadow-lg">
-                          {featuredPost.title}
-                        </h3>
-                        <div className="flex items-center gap-2 mt-2 text-xs text-white/80">
-                          <span>{new Date(featuredPost.date).toLocaleDateString("hi-IN")}</span>
-                          <span className="w-1 h-1 bg-white/50 rounded-full"></span>
-                          <span className="text-yellow-400">🔥 Trending</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )}
-
-            {/* ✅ Other News - 2 Columns Grid */}
-            {remainingPosts.map((post) => (
+          {/* ✅ 2 Column Grid - No Featured */}
+          <div className="grid md:grid-cols-2 gap-5">
+            {allPosts.map((post) => (
               <Link key={post.id} href={`/post/${post.slug}`} className="group block">
-                <div className="bg-white rounded-lg overflow-hidden hover:shadow-md transition-shadow border border-gray-100">
+                <div className="bg-white rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-100 h-full">
                   
-                  {/* Thumbnail */}
-                  <div className="relative h-[180px] bg-gray-100">
+                  {/* Thumbnail - Height 260px */}
+                  <div className="relative h-[260px] bg-gray-100">
                     {post.featuredImage?.node?.sourceUrl ? (
                       <Image
                         src={post.featuredImage.node.sourceUrl}
@@ -150,7 +94,7 @@ export default async function TrendingSection() {
                       />
                     ) : (
                       <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-                        <svg className="w-10 h-10 text-white/50" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-12 h-12 text-white/50" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
                         </svg>
                       </div>
@@ -158,15 +102,15 @@ export default async function TrendingSection() {
                     
                     {/* Category Badge */}
                     <div className="absolute top-2 left-2 z-10">
-                      <span className="bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">
+                      <span className="bg-red-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full">
                         {post.categories?.nodes?.[0]?.name || 'News'}
                       </span>
                     </div>
                   </div>
                   
-                  {/* Content */}
-                  <div className="p-3">
-                    <h3 className="font-semibold text-sm text-gray-800 group-hover:text-red-600 transition line-clamp-2">
+                  {/* Content - Padding 4px */}
+                  <div className="p-4">
+                    <h3 className="font-semibold text-base text-gray-800 group-hover:text-red-600 transition line-clamp-2">
                       {post.title}
                     </h3>
                     
@@ -197,7 +141,6 @@ export default async function TrendingSection() {
             {/* Header */}
             <div className="bg-gradient-to-r from-red-600 to-red-700 px-4 py-3">
               <h3 className="text-white font-bold text-sm flex items-center gap-2">
-                <span className="text-yellow-400">🔥</span>
                 ट्रेंडिंग टैग्स
               </h3>
             </div>
@@ -230,12 +173,7 @@ export default async function TrendingSection() {
                       hover:shadow-md
                     "
                   >
-                    #{tag.name}
-                    {tag.count && (
-                      <span className="ml-1 text-[9px] text-gray-400">
-                        ({tag.count})
-                      </span>
-                    )}
+                    {tag.name}
                   </Link>
                 ))}
               </div>
@@ -250,8 +188,38 @@ export default async function TrendingSection() {
                   <span className="group-hover:translate-x-1 transition">→</span>
                 </Link>
               </div>
+
+              
+            </div>
+            <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-r from-red-600 to-red-700 px-4 py-2.5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+                <span className="text-white font-bold text-sm tracking-wide">
+                  NewsIndia24x7
+                </span>
+              </div>
+              <span className="bg-white/20 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">
+                LIVE
+              </span>
+            </div>
+
+            <div className="relative bg-black">
+              <iframe
+                src="https://www.youtube.com/embed/fy3C4GF43Io?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
+                className="w-full aspect-video"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay"
+                allowFullScreen
+                title="NewsIndia24x7 Live TV"
+                loading="lazy"
+              ></iframe>
             </div>
           </div>
+          </div>
+          
         </div>
       </div>
     </section>

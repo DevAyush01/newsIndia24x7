@@ -28,7 +28,7 @@ export default function WorldSection({ worldData }) {
   const otherPosts = worldData.slice(1, 5);
 
   return (
-    <div className="container mx-auto px-4 py-6">
+    <div className="container mx-auto max-w-7xl px-4 py-6">
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         
         {/* Header */}

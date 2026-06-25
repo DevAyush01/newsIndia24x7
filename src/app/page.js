@@ -14,6 +14,7 @@ import DharmSection from '@/components/Homepage/DharmSection';
 import TravelSection from '@/components/Homepage/TravelSection';
 import WorldSection from '@/components/Homepage/WorldSection';
 import { getAllHomepageData } from '@/lib/wordpress';
+import TrendingSection from '@/components/Homepage/TrendingSection';
 
 export default async function page() {
   const { 
@@ -56,6 +57,7 @@ export default async function page() {
       
       {/* ✅ World Section - Ab data aa jayega */}
       <WorldSection worldData={world} />
+      <TrendingSection/>
       
       <RajyaSection />
       <PodcastSection />

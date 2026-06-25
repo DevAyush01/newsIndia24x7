@@ -20,6 +20,7 @@ export default function Header({ categories = [] }) {
   const dropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const searchInputRef = useRef(null);
+  const hoverTimeoutRef = useRef(null);
 
   useEffect(() => {
     const date = new Date();
@@ -38,7 +39,6 @@ export default function Header({ categories = [] }) {
     };
     document.addEventListener('mousedown', handleClickOutside);
 
-    // Search keyboard shortcut
     const handleKeyDown = (e) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
         e.preventDefault();
@@ -54,15 +54,27 @@ export default function Header({ categories = [] }) {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
+      if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
     };
   }, [searchOpen]);
 
-  // Focus input when search opens
   useEffect(() => {
     if (searchOpen && searchInputRef.current) {
       setTimeout(() => searchInputRef.current.focus(), 100);
     }
   }, [searchOpen]);
+
+  // ✅ Hover handlers for dropdown
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) clearTimeout(hoverTimeoutRef.current);
+    setShowStateDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setShowStateDropdown(false);
+    }, 200);
+  };
 
   const stateCategoryNames = [
     'उत्तर प्रदेश', 'दिल्ली/NCR', 'बिहार', 'महाराष्ट्र', 
@@ -84,7 +96,6 @@ export default function Header({ categories = [] }) {
     .map(orderName => categories.find(cat => cat?.name === orderName))
     .filter(Boolean);
 
-  // ✅ Search Function
   const handleSearch = async (query) => {
     setSearchQuery(query);
     if (query.length < 2) {
@@ -118,14 +129,20 @@ export default function Header({ categories = [] }) {
     <>
       <header className="sticky top-0 z-50 bg-white shadow-md">
         {/* Top Bar - Aaj Tak Style */}
-        <div className="bg-red-600">
+        <div className="bg-gradient-to-r from-red-700 to-red-600">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between py-1">
               <div className="text-[11px] text-white/90 font-medium">
                 {currentDate}
               </div>
               <div className="hidden md:flex items-center gap-5">
-                <span className="text-[10px] text-white/70 font-bold uppercase tracking-wider">Live TV</span>
+                <span className="text-[10px] text-white/70 font-bold uppercase tracking-wider">
+                  <span className="relative flex h-2 w-2 inline-block mr-1">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                  </span>
+                  LIVE TV
+                </span>
                 <span className="w-px h-4 bg-white/30"></span>
                 {topCategories.map((category) => (
                   <Link
@@ -141,7 +158,7 @@ export default function Header({ categories = [] }) {
           </div>
         </div>
 
-        {/* Main Header - Aaj Tak Style */}
+        {/* Main Header */}
         <div className="border-b border-gray-200 bg-white">
           <div className="container mx-auto px-4">
             <div className="flex items-center justify-between h-[72px]">
@@ -164,48 +181,59 @@ export default function Header({ categories = [] }) {
                     priority
                   />
                 </div>
-                <div>
-                  <h1 className="text-xl md:text-2xl font-bold text-gray-900 leading-tight">
-                    News<span className="text-red-600">India</span>
-                  </h1>
-                  <p className="text-[10px] text-gray-400 font-medium tracking-[0.15em] uppercase">
-                    सत्यमेव सर्वदा
-                  </p>
-                </div>
               </Link>
 
-              {/* Desktop Navigation - Aaj Tak Style */}
+              {/* Desktop Navigation */}
               <nav className="hidden md:block">
-                <ul className="flex items-center gap-0">
+                <ul className="flex items-center gap-1">
+                  {/* Home Link */}
+                  <li>
+                    <Link 
+                      href="/"
+                      className={`px-3 py-2 text-sm font-semibold transition-colors border-b-2 block ${
+                        pathname === '/' 
+                          ? 'text-red-600 border-red-600' 
+                          : 'text-gray-700 border-transparent hover:text-red-600 hover:border-red-300'
+                      }`}
+                    >
+                      होम
+                    </Link>
+                  </li>
+
                   {mainMenuCategories.map((category) => {
                     const isActive = pathname === `/category/${category.slug}`;
                     
                     if (category.name === 'State' || category.name === 'राज्य') {
                       return (
-                        <li key={category.slug} className="relative" ref={dropdownRef}>
+                        <li 
+                          key={category.slug} 
+                          className="relative" 
+                          ref={dropdownRef}
+                          onMouseEnter={handleMouseEnter}
+                          onMouseLeave={handleMouseLeave}
+                        >
                           <button
-                            onClick={() => setShowStateDropdown(!showStateDropdown)}
-                            className={`px-4 py-2 text-sm font-semibold transition-colors inline-flex items-center gap-1 border-b-2 ${
+                            className={`px-3 py-2 text-sm font-semibold transition-colors inline-flex items-center gap-1 border-b-2 ${
                               isActive || showStateDropdown 
                                 ? 'text-red-600 border-red-600' 
                                 : 'text-gray-700 border-transparent hover:text-red-600 hover:border-red-300'
                             }`}
                           >
                             राज्य
-                            <ChevronDown size={14} className={`transition-transform ${showStateDropdown ? 'rotate-180' : ''}`} />
+                            <ChevronDown size={14} className={`transition-transform duration-200 ${showStateDropdown ? 'rotate-180' : ''}`} />
                           </button>
                           
                           {showStateDropdown && (
                             <div className="absolute top-full left-1/2 -translate-x-1/2 mt-0 w-80 bg-white shadow-xl border rounded-b-xl z-[100] max-h-96 overflow-y-auto">
                               <div className="p-4">
-                                <Link
+                                {/* <Link
                                   href={`/category/${category.slug}`}
                                   className="block px-3 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 rounded-lg font-medium transition"
                                   onClick={() => setShowStateDropdown(false)}
                                 >
                                   🌏 सभी राज्य समाचार
-                                </Link>
-                                <div className="border-t my-2"></div>
+                                </Link> */}
+                                {/* <div className="border-t my-2"></div> */}
                                 <div className="grid grid-cols-2 gap-1">
                                   {stateCategories.map((state) => (
                                     <Link
@@ -229,7 +257,7 @@ export default function Header({ categories = [] }) {
                       <li key={category.slug}>
                         <Link 
                           href={`/category/${category.slug}`}
-                          className={`px-4 py-2 text-sm font-semibold transition-colors border-b-2 block ${
+                          className={`px-3 py-2 text-sm font-semibold transition-colors border-b-2 block ${
                             isActive 
                               ? 'text-red-600 border-red-600' 
                               : 'text-gray-700 border-transparent hover:text-red-600 hover:border-red-300'
@@ -246,7 +274,7 @@ export default function Header({ categories = [] }) {
               {/* Right Side - Search */}
               <div className="flex items-center gap-3">
                 <button 
-                   onClick={() => setSearchOpen(true)}
+                  onClick={() => setSearchOpen(true)}
                   className="p-2 cursor-pointer text-gray-400 hover:text-red-600 transition-colors rounded-full hover:bg-red-50"
                   aria-label="Search"
                 >
@@ -263,6 +291,16 @@ export default function Header({ categories = [] }) {
           <div className="md:hidden bg-white border-b border-gray-200 shadow-lg max-h-[80vh] overflow-y-auto" ref={mobileMenuRef}>
             <div className="container mx-auto px-4 py-4">
               <nav className="space-y-1">
+                <Link
+                  href="/"
+                  className={`block px-4 py-2.5 text-sm font-medium rounded-lg
+                    ${pathname === '/' ? 'text-red-600 bg-red-50' : 'text-gray-700 hover:bg-gray-50'}
+                  `}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  होम
+                </Link>
+
                 {mainMenuCategories.map((category) => {
                   const isActive = pathname === `/category/${category.slug}`;
                   
@@ -341,11 +379,10 @@ export default function Header({ categories = [] }) {
         )}
       </header>
 
-      {/* ✅ Full Screen Search Overlay */}
+      {/* Full Screen Search Overlay */}
       {searchOpen && (
         <div className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-md flex items-start justify-center pt-20 md:pt-32">
           <div className="w-full max-w-3xl mx-4">
-            {/* Close Button */}
             <button
               onClick={() => {
                 setSearchOpen(false);
@@ -357,7 +394,6 @@ export default function Header({ categories = [] }) {
               <X size={32} />
             </button>
 
-            {/* Search Form */}
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 ref={searchInputRef}
@@ -376,7 +412,6 @@ export default function Header({ categories = [] }) {
               </button>
             </form>
 
-            {/* Search Results */}
             {searchQuery.length >= 2 && (
               <div className="mt-8 max-h-[50vh] overflow-y-auto">
                 {searchLoading ? (
@@ -426,8 +461,6 @@ export default function Header({ categories = [] }) {
                 )}
               </div>
             )}
-
-           
           </div>
         </div>
       )}

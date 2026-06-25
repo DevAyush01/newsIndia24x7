@@ -59,7 +59,7 @@ export default function SportsSection({ sportsData }) {
                       src={mainPost.featuredImage.node.sourceUrl}
                       alt={mainPost.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-fill group-hover:scale-105 transition-transform duration-300"
                       sizes="(max-width: 768px) 100vw, 66vw"
                     />
                   ) : (
@@ -137,7 +137,7 @@ export default function SportsSection({ sportsData }) {
                           src={post.featuredImage.node.sourceUrl}
                           alt={post.title}
                           fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="object-fill group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center bg-gray-100">
