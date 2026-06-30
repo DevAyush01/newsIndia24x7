@@ -1,4 +1,4 @@
-// app/videos/page.jsx
+// app/podcasts/page.jsx
 export const dynamic = 'force-dynamic';
 
 import React from 'react';
@@ -17,10 +17,10 @@ const getYouTubeId = (content) => {
   return match ? match[1] : null;
 };
 
-async function getAllVideos() {
+async function getAllPodcasts() {
   const query = `
-    query GetAllVideos {
-      posts(first: 30, where: { categoryName: "Video" }) {
+    query GetAllPodcasts {
+      posts(first: 30, where: { categoryName: "podcast" }) {
         nodes {
           id
           title
@@ -45,7 +45,7 @@ async function getAllVideos() {
     
     return posts.filter(post => getYouTubeId(post.content));
   } catch (error) {
-    console.error('Error fetching videos:', error);
+    console.error('Error fetching podcasts:', error);
     return [];
   }
 }
@@ -80,13 +80,12 @@ async function getLatestNews() {
   }
 }
 
-export default async function VideosPage() {
-  const videos = await getAllVideos();
+export default async function PodcastsPage() {
+  const podcasts = await getAllPodcasts();
   const latestNews = await getLatestNews();
 
-  // ✅ Featured Video (First video - Hero)
-  const featuredVideo = videos.length > 0 ? videos[0] : null;
-  const remainingVideos = videos.slice(1);
+  const featuredPodcast = podcasts.length > 0 ? podcasts[0] : null;
+  const remainingPodcasts = podcasts.slice(1);
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -100,7 +99,7 @@ export default async function VideosPage() {
           <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <span className="text-gray-700 font-medium">वीडियो</span>
+          <span className="text-gray-700 font-medium">पॉडकास्ट</span>
         </nav>
 
         {/* ✅ Header with Newspaper Style */}
@@ -110,34 +109,35 @@ export default async function VideosPage() {
               <div className="w-1.5 h-10 bg-red-600 rounded-full"></div>
               <div>
                 <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight">
-                  <span className="text-red-600">वी</span>डियो
+                  <span className="text-red-600">पॉड</span>कास्ट
                 </h1>
-                <p className="text-gray-500 text-sm mt-1">ताज़ा वीडियो समाचार, अपडेट और विशेष कवरेज</p>
+                <p className="text-gray-500 text-sm mt-1">ऑडियो समाचार, विशेष साक्षात्कार और चर्चा</p>
               </div>
             </div>
-          
+            
           </div>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* ✅ LEFT CONTENT - Videos */}
+          {/* ✅ LEFT CONTENT - Podcasts */}
           <div className="w-full lg:w-[70%]">
 
-            {/* ✅ Featured Video (Hero Section) */}
-            {featuredVideo && (
+            {/* ✅ Featured Podcast (Hero Section) */}
+            {featuredPodcast && (
               <div className="mb-6">
-                <Link href={`/video/${featuredVideo.slug}`} className="group block">
+                <Link href={`/podcast/${featuredPodcast.slug}`} className="group block">
                   <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
                     <div className="grid md:grid-cols-5 gap-0">
                       <div className="md:col-span-3 relative aspect-video md:aspect-auto md:h-[280px] bg-gray-200 overflow-hidden">
                         <Image
-                          src={getYouTubeThumbnail(featuredVideo.content)}
-                          alt={featuredVideo.title}
+                          src={getYouTubeThumbnail(featuredPodcast.content)}
+                          alt={featuredPodcast.title}
                           fill
                           className="object-cover group-hover:scale-105 transition-transform duration-500"
                           unoptimized={true}
                         />
+                        {/* ✅ Play Button Overlay - Hero */}
                         <div className="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform duration-300">
                             <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
@@ -155,10 +155,10 @@ export default async function VideosPage() {
                       <div className="md:col-span-2 p-6 md:p-6 flex flex-col justify-center bg-gradient-to-br from-white to-gray-50">
                         <div className="flex items-center gap-2 mb-2">
                           <span className="bg-red-100 text-red-700 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                            {featuredVideo.categories?.nodes?.[0]?.name || 'Video'}
+                            {featuredPodcast.categories?.nodes?.[0]?.name || 'Podcast'}
                           </span>
                           <span className="text-xs text-gray-400">
-                            {new Date(featuredVideo.date).toLocaleDateString('hi-IN', {
+                            {new Date(featuredPodcast.date).toLocaleDateString('hi-IN', {
                               day: 'numeric',
                               month: 'long',
                               year: 'numeric'
@@ -166,15 +166,15 @@ export default async function VideosPage() {
                           </span>
                         </div>
                         <h2 className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-red-600 transition line-clamp-3">
-                          {featuredVideo.title}
+                          {featuredPodcast.title}
                         </h2>
-                        {featuredVideo.excerpt && (
+                        {featuredPodcast.excerpt && (
                           <p className="text-gray-600 text-sm mt-2 line-clamp-2" 
-                             dangerouslySetInnerHTML={{ __html: featuredVideo.excerpt }} />
+                             dangerouslySetInnerHTML={{ __html: featuredPodcast.excerpt }} />
                         )}
                         <div className="mt-3 flex items-center gap-3">
                           <span className="text-red-600 text-sm font-medium flex items-center gap-1">
-                            वीडियो देखें
+                            पॉडकास्ट सुनें
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -187,13 +187,13 @@ export default async function VideosPage() {
               </div>
             )}
 
-            {/* ✅ Videos Grid */}
-            {remainingVideos.length > 0 ? (
+            {/* ✅ Podcasts Grid */}
+            {remainingPodcasts.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {remainingVideos.map((video) => (
+                {remainingPodcasts.map((podcast) => (
                   <Link 
-                    key={video.id} 
-                    href={`/video/${video.slug}`} 
+                    key={podcast.id} 
+                    href={`/podcast/${podcast.slug}`} 
                     className="group"
                   >
                     <div className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 h-full hover:-translate-y-1">
@@ -201,28 +201,28 @@ export default async function VideosPage() {
                       {/* Thumbnail */}
                       <div className="relative aspect-video bg-gray-200 overflow-hidden">
                         <Image
-                          src={getYouTubeThumbnail(video.content)}
-                          alt={video.title}
+                          src={getYouTubeThumbnail(podcast.content)}
+                          alt={podcast.title}
                           fill
                           className="object-cover group-hover:scale-110 transition-transform duration-500"
                           unoptimized={true}
                         />
                         
-                        {/* Play Button Overlay */}
+                        {/* ✅ Play Button Overlay - Grid */}
                         <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-transform duration-300">
-                            <svg className="w-6 h-6 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                               <path d="M8 5v14l11-7z"/>
                             </svg>
                           </div>
                         </div>
 
-                        {/* Video Badge */}
+                        {/* Podcast Badge */}
                         <div className="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-medium px-2 py-1 rounded-full flex items-center gap-1">
                           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z"/>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6l5.25 3.15L17 12.23l-4-2.37V7z"/>
                           </svg>
-                          वीडियो
+                          पॉडकास्ट
                         </div>
                       </div>
 
@@ -230,12 +230,12 @@ export default async function VideosPage() {
                       <div className="p-3">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="bg-red-50 text-red-600 text-[9px] font-bold px-2 py-0.5 rounded-full border border-red-200">
-                            {video.categories?.nodes?.[0]?.name || 'Video'}
+                            {podcast.categories?.nodes?.[0]?.name || 'Podcast'}
                           </span>
                         </div>
                         
                         <h3 className="text-sm font-semibold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-2 min-h-[38px]">
-                          {video.title}
+                          {podcast.title}
                         </h3>
                         
                         <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-100">
@@ -243,14 +243,14 @@ export default async function VideosPage() {
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                             </svg>
-                            {new Date(video.date).toLocaleDateString('hi-IN', {
+                            {new Date(podcast.date).toLocaleDateString('hi-IN', {
                               day: 'numeric',
                               month: 'short'
                             })}
                           </span>
                           
                           <span className="text-[10px] text-red-600 font-medium flex items-center gap-1 group-hover:underline">
-                            देखें
+                            सुनें
                             <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                             </svg>
@@ -262,19 +262,17 @@ export default async function VideosPage() {
                 ))}
               </div>
             ) : (
-              // ✅ Empty State
               <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-16 text-center">
-                <div className="text-6xl mb-4">🎬</div>
-                <h3 className="text-xl font-semibold text-gray-700">कोई वीडियो नहीं</h3>
-                <p className="text-gray-400 text-sm mt-1">अभी कोई वीडियो उपलब्ध नहीं है</p>
+                <div className="text-6xl mb-4">🎙️</div>
+                <h3 className="text-xl font-semibold text-gray-700">कोई पॉडकास्ट नहीं</h3>
+                <p className="text-gray-400 text-sm mt-1">अभी कोई पॉडकास्ट उपलब्ध नहीं है</p>
               </div>
             )}
 
-            {/* ✅ View All Button (if more than 30) */}
-            {videos.length > 30 && (
+            {podcasts.length > 30 && (
               <div className="mt-8 text-center">
                 <button className="bg-white hover:bg-gray-50 text-gray-700 font-medium px-8 py-3 rounded-xl border border-gray-200 transition-all hover:border-red-300 text-sm">
-                  और वीडियो लोड करें
+                  और पॉडकास्ट लोड करें
                 </button>
               </div>
             )}
@@ -284,7 +282,6 @@ export default async function VideosPage() {
           {/* ✅ RIGHT SIDEBAR - Latest News */}
           <aside className="w-full lg:w-[30%]">
             <div className="sticky top-24">
-              {/* Latest News Card */}
               <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="bg-gradient-to-r from-red-600 to-red-700 px-5 py-3">
                   <div className="flex items-center gap-2">
@@ -342,7 +339,7 @@ export default async function VideosPage() {
 
         </div>
 
-       
+      
       </div>
     </div>
   );

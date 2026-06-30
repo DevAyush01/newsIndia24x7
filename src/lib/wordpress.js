@@ -612,7 +612,61 @@ export async function getAllHomepageData() {
 
 
 
-export async function getCategoryData(slug, first = 12, after = null) {
+// lib/wordpress.js - ✅ Add this function
+
+export async function getLatestPosts(limit = 8) {
+  const query = `
+    query GetLatestPosts {
+      posts(first: ${limit}, where: { orderby: { field: DATE, order: DESC } }) {
+        nodes {
+          id
+          title
+          slug
+          date
+          excerpt
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const response = await fetch(WPGRAPHQL_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+      next: { revalidate: 60 },
+    });
+
+    if (!response.ok) {
+      console.error('❌ Response not OK:', response.status);
+      return [];
+    }
+
+    const data = await response.json();
+    
+    if (data.errors) {
+      console.error('❌ GraphQL Errors:', data.errors);
+      return [];
+    }
+
+    return data?.data?.posts?.nodes || [];
+  } catch (error) {
+    console.error('❌ Error fetching latest posts:', error);
+    return [];
+  }
+}
+
+
+// lib/wordpress.js - ✅ FIXED: Cursor-based pagination
+
+export async function getCategoryData(slug, first = 15, after = null) {
   const query = `
     query GetCategoryData($slug: String!, $first: Int!, $after: String) {
       categories(where: { search: $slug }) {
@@ -650,12 +704,17 @@ export async function getCategoryData(slug, first = 12, after = null) {
         }
       }
       
-      latestPosts: posts(first: 10) {
+      latestPosts: posts(first: 10, where: { orderby: { field: DATE, order: DESC } }) {
         nodes {
           id
           title
           slug
           date
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
         }
       }
     }
@@ -711,7 +770,6 @@ export async function getCategoryData(slug, first = 12, after = null) {
     };
   }
 }
-
 
 
 // lib/wordpress.js - ✅ FINAL FIXED VERSION
@@ -986,35 +1044,35 @@ export async function getBreakingNews(limit = 10) {
 }
 
 // ✅ Fallback function - Latest posts fetch karega
-async function getLatestPosts(limit = 10) {
-  const query = `
-    query GetLatestPosts {
-      posts(first: ${limit}, where: { orderby: { field: DATE, order: DESC } }) {
-        nodes {
-          id
-          title
-          slug
-          date
-          excerpt
-        }
-      }
-    }
-  `;
+// async function getLatestPosts(limit = 10) {
+//   const query = `
+//     query GetLatestPosts {
+//       posts(first: ${limit}, where: { orderby: { field: DATE, order: DESC } }) {
+//         nodes {
+//           id
+//           title
+//           slug
+//           date
+//           excerpt
+//         }
+//       }
+//     }
+//   `;
 
-  try {
-    const response = await fetch(WPGRAPHQL_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ query }),
-      next: { revalidate: 60 },
-    });
+//   try {
+//     const response = await fetch(WPGRAPHQL_URL, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({ query }),
+//       next: { revalidate: 60 },
+//     });
 
-    const data = await response.json();
-    return data?.data?.posts?.nodes || [];
-  } catch (error) {
-    console.error('❌ Error fetching latest posts:', error);
-    return [];
-  }
-}
+//     const data = await response.json();
+//     return data?.data?.posts?.nodes || [];
+//   } catch (error) {
+//     console.error('❌ Error fetching latest posts:', error);
+//     return [];
+//   }
+// }

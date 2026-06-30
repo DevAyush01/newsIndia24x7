@@ -94,7 +94,7 @@ export default async function PodcastSection() {
             PODCASTS
           </span>
         </div>
-        <Link href="/category/podcast" className="text-red-600 text-xs font-semibold hover:text-red-700 transition flex items-center gap-1 group">
+        <Link href="/podcasts" className="text-red-600 text-xs font-semibold hover:text-red-700 transition flex items-center gap-1 group">
           सभी देखें 
           <span className="group-hover:translate-x-1 transition">→</span>
         </Link>
@@ -103,7 +103,7 @@ export default async function PodcastSection() {
       {/* 4 Videos Grid - Fixed Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {podcasts.slice(0, 4).map((podcast) => (
-          <Link key={podcast.id} href={`/post/${podcast.slug}`} className="group block">
+          <Link key={podcast.id} href={`/podcast/${podcast.slug}`} className="group block">
             <article className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 h-full">
               {/* Thumbnail with Play Button */}
               <div className="relative aspect-video overflow-hidden bg-gray-100">

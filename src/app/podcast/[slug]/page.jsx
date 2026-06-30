@@ -1,4 +1,4 @@
-// app/video/[slug]/page.jsx
+// app/podcast/[slug]/page.jsx
 
 export const dynamic = 'force-dynamic';
 
@@ -44,13 +44,13 @@ const cleanContent = (content) => {
   return cleaned;
 };
 
-// ✅ Fetch ONLY video posts (not podcast)
-async function getVideoData(slug) {
+// ✅ Fetch ONLY podcast posts
+async function getPodcastData(slug) {
   const query = `
-    query GetVideoPost($slug: String!) {
+    query GetPodcastPost($slug: String!) {
       posts(where: { 
         name: $slug,
-        categoryName: "videos"
+        categoryName: "podcast"
       }) {
         nodes {
           id
@@ -83,7 +83,7 @@ async function getVideoData(slug) {
       cleanContent: cleanContent(post.content)
     };
   } catch (error) {
-    console.error('❌ Error fetching video:', error);
+    console.error('❌ Error fetching podcast:', error);
     return null;
   }
 }
@@ -118,16 +118,16 @@ async function getLatestNews() {
   }
 }
 
-export default async function VideoPage({ params }) {
+export default async function PodcastPage({ params }) {
   const { slug } = await params;
-  const video = await getVideoData(slug);
+  const podcast = await getPodcastData(slug);
   const latestNews = await getLatestNews();
 
-  if (!video || !video.youtubeId) {
+  if (!podcast || !podcast.youtubeId) {
     notFound();
   }
 
-  const categoryName = video.categories?.nodes?.[0]?.name || 'Video';
+  const categoryName = podcast.categories?.nodes?.[0]?.name || 'Podcast';
 
   return (
     <div className="bg-gray-50 min-h-screen">
@@ -141,32 +141,32 @@ export default async function VideoPage({ params }) {
           <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <Link href="/videos" className="hover:text-red-600 transition-colors">
-            वीडियो
+          <Link href="/podcasts" className="hover:text-red-600 transition-colors">
+            पॉडकास्ट
           </Link>
           <svg className="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
-          <span className="text-gray-700 font-medium line-clamp-1 ">
-            {video.title}
+          <span className="text-gray-700 font-medium line-clamp-1 max-w-[200px] md:max-w-full">
+            {podcast.title}
           </span>
         </nav>
 
         <div className="flex flex-col lg:flex-row gap-8">
 
-          {/* ✅ LEFT CONTENT - Video Player */}
+          {/* ✅ LEFT CONTENT - Podcast Player */}
           <div className="w-full lg:w-[70%]">
             
-            {/* ✅ Video Player */}
+            {/* ✅ Podcast Player */}
             <div className="bg-white rounded-xl overflow-hidden shadow-lg border border-gray-100">
               <div className="relative aspect-video bg-black">
-                {video.embedUrl ? (
+                {podcast.embedUrl ? (
                   <iframe
-                    src={video.embedUrl}
+                    src={podcast.embedUrl}
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
-                    title={video.title}
+                    title={podcast.title}
                     loading="lazy"
                   />
                 ) : (
@@ -175,20 +175,22 @@ export default async function VideoPage({ params }) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span className="text-gray-500 text-sm">Video not available</span>
+                    <span className="text-gray-500 text-sm">Podcast not available</span>
                   </div>
                 )}
                 
-                {/* ✅ Video Badge */}
+                {/* ✅ Podcast Badge */}
                 <div className="absolute top-4 left-4 flex gap-2">
                   <span className="bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-lg">
-                    <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                    वीडियो
+                    <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6l5.25 3.15L17 12.23l-4-2.37V7z"/>
+                    </svg>
+                    पॉडकास्ट
                   </span>
                 </div>
               </div>
 
-              {/* ✅ Video Info */}
+              {/* ✅ Podcast Info */}
               <div className="p-6 md:p-8">
                 <div className="flex flex-wrap items-center gap-3 mb-3">
                   <span className="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full border border-red-200">
@@ -198,7 +200,7 @@ export default async function VideoPage({ params }) {
                     <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    {new Date(video.date).toLocaleDateString('hi-IN', {
+                    {new Date(podcast.date).toLocaleDateString('hi-IN', {
                       day: 'numeric',
                       month: 'long',
                       year: 'numeric'
@@ -207,18 +209,18 @@ export default async function VideoPage({ params }) {
                 </div>
 
                 <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 leading-tight">
-                  {video.title}
+                  {podcast.title}
                 </h1>
 
-                {video.excerpt && (
+                {podcast.excerpt && (
                   <div 
                     className="text-gray-600 text-sm mt-4 leading-relaxed border-l-4 border-red-600 pl-4 bg-gray-50 py-2 rounded-r"
-                    dangerouslySetInnerHTML={{ __html: video.excerpt }}
+                    dangerouslySetInnerHTML={{ __html: podcast.excerpt }}
                   />
                 )}
 
                 {/* ✅ Clean Content */}
-                {video.cleanContent && (
+                {podcast.cleanContent && (
                   <div 
                     className="text-gray-700 text-base mt-6 leading-relaxed prose prose-gray max-w-none
                       [&>p]:mb-4 [&>p]:leading-7
@@ -228,7 +230,7 @@ export default async function VideoPage({ params }) {
                       [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:mb-4
                       [&>li]:mb-1.5 [&>li]:leading-7
                       [&>strong]:text-gray-900 [&>b]:text-gray-900"
-                    dangerouslySetInnerHTML={{ __html: video.cleanContent }}
+                    dangerouslySetInnerHTML={{ __html: podcast.cleanContent }}
                   />
                 )}
 
@@ -238,11 +240,11 @@ export default async function VideoPage({ params }) {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                     </svg>
-                    Share this video:
+                    Share this podcast:
                   </h4>
                   <div className="flex flex-wrap gap-3">
                     <a 
-                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://newsindia24x7.tv/video/${video.slug}`)}`}
+                      href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://newsindia24x7.tv/podcast/${podcast.slug}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#1877F2] hover:bg-[#0d65d9] text-white px-5 py-2.5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2"
@@ -253,7 +255,7 @@ export default async function VideoPage({ params }) {
                       Facebook
                     </a>
                     <a 
-                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://newsindia24x7.tv/video/${video.slug}`)}&text=${encodeURIComponent(video.title)}`}
+                      href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://newsindia24x7.tv/podcast/${podcast.slug}`)}&text=${encodeURIComponent(podcast.title)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#000000] hover:bg-[#1a1a1a] text-white px-5 py-2.5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2"
@@ -264,7 +266,7 @@ export default async function VideoPage({ params }) {
                       Twitter
                     </a>
                     <a 
-                      href={`https://wa.me/?text=${encodeURIComponent(`${video.title} - https://newsindia24x7.tv/video/${video.slug}`)}`}
+                      href={`https://wa.me/?text=${encodeURIComponent(`${podcast.title} - https://newsindia24x7.tv/podcast/${podcast.slug}`)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-[#25D366] hover:bg-[#1da851] text-white px-5 py-2.5 rounded-lg text-sm transition-all hover:scale-105 flex items-center gap-2"
@@ -279,16 +281,16 @@ export default async function VideoPage({ params }) {
               </div>
             </div>
 
-            {/* ✅ Back to Videos */}
+            {/* ✅ Back to Podcasts */}
             <div className="mt-6 text-center">
               <Link 
-                href="/videos"
+                href="/podcasts"
                 className="inline-flex items-center gap-2 text-gray-600 hover:text-red-600 transition border border-gray-200 hover:border-red-300 px-6 py-3 rounded-xl text-sm font-medium bg-white hover:bg-red-50"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                 </svg>
-                सभी वीडियो देखें
+                सभी पॉडकास्ट देखें
               </Link>
             </div>
           </div>
@@ -354,7 +356,7 @@ export default async function VideoPage({ params }) {
 
         </div>
 
-     
+        
       </div>
     </div>
   );
