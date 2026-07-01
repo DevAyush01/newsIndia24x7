@@ -15,6 +15,8 @@ import TravelSection from '@/components/Homepage/TravelSection';
 import WorldSection from '@/components/Homepage/WorldSection';
 import { getAllHomepageData } from '@/lib/wordpress';
 import TrendingSection from '@/components/Homepage/TrendingSection';
+import WebStoriesSection from '@/components/Homepage/WebStoriesSection';
+import WebsiteLowerBand from '@/components/Homepage/WebsiteLowerBand';
 
 export default async function page() {
   const { 
@@ -55,16 +57,18 @@ export default async function page() {
         rasifalData={rasifal} 
       />
       
-      {/* ✅ World Section - Ab data aa jayega */}
       <WorldSection worldData={world} />
       <TrendingSection/>
       
+      <WebStoriesSection/>
       <RajyaSection />
       <PodcastSection />
       <CrimeSection />
       <BottomSlider sliderData={allLatest} />
       
       <TravelSection travelData={allTravelData} />
+      <WebsiteLowerBand/>
+
       
     </>
   );

@@ -122,7 +122,7 @@ export default function Footer() {
               />
               <button
                 type="submit"
-                className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition whitespace-nowrap"
+                className="px-6 py-3 cursor-pointer bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition whitespace-nowrap"
               >
                 Subscribe
               </button>
@@ -144,7 +144,7 @@ export default function Footer() {
                 Privacy Policy
               </Link>
               {' '}and{' '}
-              <Link href="/terms" className="text-gray-400 hover:text-white underline">
+              <Link href="/terms-and-conditions" className="text-gray-400 hover:text-white underline">
                 Terms & Conditions
               </Link>
               .
@@ -156,8 +156,10 @@ export default function Footer() {
         <div className="mt-8 pt-6 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-500">
           <p>© 2026 NewsIndia24x7. All rights reserved.</p>
           <div className="flex gap-6 mt-2 sm:mt-0">
+            <Link href="/about" className="hover:text-white transition">About</Link>
+            <Link href="/advertise" className="hover:text-white transition">Advertise with us</Link>
             <Link href="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition">Terms & Condition</Link>
+            <Link href="/terms-and-conditions" className="hover:text-white transition">Terms & Conditions</Link>
             <Link href="/contact" className="hover:text-white transition">Contact Us</Link>
           </div>
         </div>
