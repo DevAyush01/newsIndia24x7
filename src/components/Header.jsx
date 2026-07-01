@@ -174,7 +174,7 @@ export default function Header({ categories = [] }) {
               <Link href="/" className="flex items-center gap-3">
                 <div className="relative w-12 h-12 md:w-14 md:h-14">
                   <Image 
-                    src="/news-indiaLogo.webp" 
+                    src="/news-indiaLogo.png" 
                     alt="News India 24x7"
                     fill
                     className="object-contain"
