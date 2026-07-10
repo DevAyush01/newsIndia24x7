@@ -1,4 +1,5 @@
-// app/page.jsx
+// app/page.jsx - ✅ FIXED with breakingNews data
+
 import React from 'react';
 import BreakingSectionTop from '@/components/Homepage/BreakingSectionTop';
 import FirstTopSection from '@/components/Homepage/FirstTopSection';
@@ -13,10 +14,11 @@ import SportsSection from '@/components/Homepage/SportsSection';
 import DharmSection from '@/components/Homepage/DharmSection';
 import TravelSection from '@/components/Homepage/TravelSection';
 import WorldSection from '@/components/Homepage/WorldSection';
-import { getAllHomepageData } from '@/lib/wordpress';
+import { getAllHomepageData, getBreakingNews } from '@/lib/wordpress';
 import TrendingSection from '@/components/Homepage/TrendingSection';
 import WebStoriesSection from '@/components/Homepage/WebStoriesSection';
 import WebsiteLowerBand from '@/components/Homepage/WebsiteLowerBand';
+import BadiKhabre from '@/components/Homepage/BadiKhabre';
 
 export default async function page() {
   const { 
@@ -31,6 +33,9 @@ export default async function page() {
     allLatest
   } = await getAllHomepageData();
 
+  // ✅ Fetch breaking news separately
+  const breakingNews = await getBreakingNews(10);
+
   // ✅ Combine travel data
   const allTravelData = [
     ...travel,
@@ -41,16 +46,19 @@ export default async function page() {
 
   return (
     <>
-      <BreakingSectionTop />
+      {/* ✅ Pass breakingNews as prop */}
+      <BreakingSectionTop breakingNews={breakingNews} />
 
       <TrendingSlider />
       
       <FirstTopSection />
+
+      <BadiKhabre/>
+      <VideoSection />
       
       <SportsSection sportsData={sports} />
       
       <ManoranjanSection />
-      <VideoSection />
       
       <DharmSection 
         religiousData={religious} 
@@ -68,8 +76,6 @@ export default async function page() {
       
       <TravelSection travelData={allTravelData} />
       <WebsiteLowerBand/>
-
-      
     </>
   );
 }

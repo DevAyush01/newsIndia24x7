@@ -1,4 +1,4 @@
-// components/Homepage/VideoSection.jsx - ✅ Server Component
+// components/Homepage/VideoSection.jsx - ✅ Center Video Full Width
 
 import React from 'react';
 import Image from "next/image";
@@ -83,7 +83,7 @@ export default async function VideoSection() {
       <div className="container max-w-7xl mx-auto px-4">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-5 border-b border-white/20 pb-3">
+        <div className="flex items-center justify-between mb-5 pb-3">
           <div className="flex items-center gap-2">
             <div className="w-1 h-6 bg-red-500 rounded-full"></div>
             <h2 className="text-white text-xl font-bold flex items-center gap-2">
@@ -105,116 +105,100 @@ export default async function VideoSection() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
           
-          {/* Left Column Videos */}
-          <div className="space-y-4">
-            {otherVideos.slice(0, 2).map((video) => (
-              <Link key={video.id} href={`/video/${video.slug}`} className="group block">
-                <div className="relative rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.02]">
-                  <div className="relative aspect-video">
-                    <Image
-                      src={video.thumbnailUrl}
-                      alt={video.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Play Icon Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
+        
+          <div className="lg:col-span-1 pr-3 border-r border-white/20">
+            <div className="space-y-3">
+              {otherVideos.slice(0, 2).map((video) => (
+                <Link key={video.id} href={`/video/${video.slug}`} className="group block">
+                  <div className="relative overflow-hidden">
+                    <div className="relative aspect-video h-[120px]">
+                      <Image
+                        src={video.thumbnailUrl}
+                        alt={video.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
                       </div>
                     </div>
+                    <h3 className="text-white text-sm font-semibold mt-2 line-clamp-3">
+                      {video.title}
+                    </h3>
                   </div>
-                  
-                  <h3 className="text-white text-sm font-semibold mt-2 line-clamp-2 group-hover:text-yellow-300 transition-colors">
-                    {video.title}
-                  </h3>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
 
-          {/* Featured Video - Center Large */}
+      
           {featuredVideo && (
-            <Link
-              href={`/video/${featuredVideo.slug}`}
-              className="lg:col-span-2 group block"
-            >
-              <div className="relative rounded-xl overflow-hidden shadow-2xl">
-                <div className="relative aspect-video">
-                  <Image
-                    src={featuredVideo.thumbnailUrl}
-                    alt={featuredVideo.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-
-                  {/* Play Button */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-xl">
-                      <svg className="w-8 h-8 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z" />
-                      </svg>
-                    </div>
-                  </div>
-
-                  {/* Title Overlay */}
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="text-white text-xl md:text-2xl font-bold line-clamp-2 drop-shadow-lg">
-                      {featuredVideo.title}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-2 text-white/80 text-xs">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                        Watch Now
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          )}
-
-          {/* Right Column Videos */}
-          <div className="space-y-4">
-            {otherVideos.slice(2, 4).map((video) => (
-              <Link key={video.id} href={`/video/${video.slug}`} className="group block">
-                <div className="relative rounded-xl overflow-hidden shadow-lg transition-transform duration-300 hover:scale-[1.02]">
-                  <div className="relative aspect-video">
+            <div className="lg:col-span-3 px-4 border-r border-white/20 flex items-center justify-center">
+              <Link
+                href={`/video/${featuredVideo.slug}`}
+                className="group block w-full"
+              >
+                <div className="relative overflow-hidden shadow-xl w-full">
+                  <div className="relative aspect-video w-full">
                     <Image
-                      src={video.thumbnailUrl}
-                      alt={video.title}
+                      src={featuredVideo.thumbnailUrl}
+                      alt={featuredVideo.title}
                       fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
-                    {/* Play Icon Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
-                        <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"/>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                       </div>
                     </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                      <h3 className="text-white text-lg md:text-xl font-bold line-clamp-2">
+                        {featuredVideo.title}
+                      </h3>
+                    </div>
                   </div>
-                  
-                  <h3 className="text-white text-sm font-semibold mt-2 line-clamp-2 group-hover:text-yellow-300 transition-colors">
-                    {video.title}
-                  </h3>
                 </div>
               </Link>
-            ))}
+            </div>
+          )}
+
+        
+          <div className="lg:col-span-1 pl-3">
+            <div className="space-y-3">
+              {otherVideos.slice(2, 4).map((video) => (
+                <Link key={video.id} href={`/video/${video.slug}`} className="group block">
+                  <div>
+                    <div className="relative aspect-video h-[120px]">
+                      <Image
+                        src={video.thumbnailUrl}
+                        alt={video.title}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center">
+                          <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 className="text-white text-sm font-semibold mt-2 line-clamp-3">
+                      {video.title}
+                    </h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

@@ -1,103 +1,50 @@
-// components/BreakingNewsTicker.jsx - ✅ Server Component (No styled-jsx)
+"use client";
 
-import React from 'react';
-import Link from 'next/link';
-import { getBreakingNews } from '@/lib/wordpress';
+import React, { useState } from "react";
+import Link from "next/link";
+import { X } from "lucide-react";
 
-export default async function BreakingSectionTop() {
-  const breakingNews = await getBreakingNews(10);
+export default function BreakingSectionTop({ breakingNews }) {
+  const [isVisible, setIsVisible] = useState(true);
 
-  if (!breakingNews || breakingNews.length === 0) {
-    return null;
-  }
+  if (!breakingNews?.length) return null;
+  if (!isVisible) return null;
+
+  const mainBreaking = breakingNews[0];
+
+  const handleClose = () => {
+    setIsVisible(false);
+  };
 
   return (
-    <div className="w-full bg-gradient-to-r from-red-700 to-red-800 text-white border-b border-red-900 shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center h-12">
+    <div className="w-full py-3 bg-white">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="bg-red-600 rounded-full h-10 flex items-center px-5 text-white overflow-hidden">
+          
           {/* Breaking Label */}
-          <div className="flex items-center gap-2 shrink-0 bg-red-600 px-4 py-1.5 rounded-full shadow-md mr-4">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-            </span>
-            <span className="font-bold text-sm tracking-wider">BREAKING NEWS</span>
+          <div className="shrink-0 font-black italic text-2xl uppercase">
+            BREAKING NEWS
           </div>
 
-          {/* ✅ Marquee Slider - CSS inline */}
-          <div className="relative flex-1 overflow-hidden h-full">
-            <div 
-              className="whitespace-nowrap inline-flex items-center h-full"
-              style={{
-                animation: 'marquee 30s linear infinite',
-                width: 'max-content'
-              }}
+          {/* Divider */}
+          <div className="mx-5 h-6 w-px bg-white/70 shrink-0" />
+
+          {/* News Text */}
+          <div className="flex-1 overflow-hidden whitespace-nowrap">
+            <Link
+              href={`/post/${mainBreaking.slug}`}
+              className="font-semibold text-lg hover:text-white"
             >
-              {breakingNews.map((item, index) => (
-                <React.Fragment key={item.id}>
-                  <Link
-                    href={`/post/${item.slug}`}
-                    className="inline-flex items-center gap-2 mx-4 text-sm hover:text-yellow-300 transition-colors duration-200"
-                  >
-                    {index < 2 && (
-                      <span className="inline-block w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse"></span>
-                    )}
-                    <span className="font-medium">{item.title}</span>
-                    {index === 0 && (
-                      <span className="inline-block bg-yellow-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded ml-1 animate-pulse">
-                        NEW
-                      </span>
-                    )}
-                  </Link>
-                  {index < breakingNews.length - 1 && (
-                    <span className="text-red-300 text-lg mx-1">✦</span>
-                  )}
-                </React.Fragment>
-              ))}
-              
-              {/* Duplicate for seamless loop */}
-              {breakingNews.map((item, index) => (
-                <React.Fragment key={`dup-${item.id}`}>
-                  <Link
-                    href={`/post/${item.slug}`}
-                    className="inline-flex items-center gap-2 mx-4 text-sm hover:text-yellow-300 transition-colors duration-200"
-                  >
-                    {index < 2 && (
-                      <span className="inline-block w-1.5 h-1.5 bg-yellow-400 rounded-full animate-pulse"></span>
-                    )}
-                    <span className="font-medium">{item.title}</span>
-                    {index === 0 && (
-                      <span className="inline-block bg-yellow-500 text-black text-[10px] font-bold px-1.5 py-0.5 rounded ml-1">
-                        NEW
-                      </span>
-                    )}
-                  </Link>
-                  <span className="text-red-300 text-lg mx-1">✦</span>
-                </React.Fragment>
-              ))}
-            </div>
+              {mainBreaking.title}
+            </Link>
           </div>
 
-          {/* Live Time */}
-          <div className="hidden md:flex items-center gap-2 shrink-0 ml-4 bg-red-800/50 px-3 py-1 rounded-full">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-            </span>
-            <span className="text-xs font-mono">
-              LIVE • {new Date().toLocaleTimeString('hi-IN', { hour: '2-digit', minute: '2-digit' })}
-            </span>
-          </div>
+          {/* Close Icon */}
+          <button onClick={handleClose} className="ml-4 shrink-0 cursor-pointer hover:opacity-70 transition-opacity">
+            <X size={20} strokeWidth={3} />
+          </button>
         </div>
       </div>
-
-      {/* ✅ Global CSS - style tag */}
-      <style>{`
-        @keyframes marquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
     </div>
   );
 }

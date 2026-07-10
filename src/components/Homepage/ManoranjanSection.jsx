@@ -123,8 +123,8 @@ export default async function ManoranjanSection() {
           {/* Featured Post - Large */}
           {entertainmentPosts[0] && (
             <Link href={`/post/${entertainmentPosts[0].slug}`} className="group block mb-5">
-              <div className="relative rounded-xl overflow-hidden bg-gray-900">
-                <div className="relative h-[320px] md:h-[380px]">
+              <div className="relative  overflow-hidden bg-gray-900">
+                <div className="relative h-[320px] md:h-[400px]">
                   {entertainmentPosts[0].featuredImage?.node?.sourceUrl ? (
                     <>
                       <Image
@@ -169,8 +169,8 @@ export default async function ManoranjanSection() {
           <div className="grid md:grid-cols-2 gap-4">
             {entertainmentPosts.slice(1, 5).map((post) => (
               <Link key={post.id} href={`/post/${post.slug}`} className="group block">
-                <div className="flex gap-3 hover:bg-gray-50 p-2 rounded-lg transition">
-                  <div className="relative w-24 h-20 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                <div className="flex gap-3 hover:bg-gray-50 p-2  transition">
+                  <div className="relative w-24 h-20 shrink-0 overflow-hidden  bg-gray-100">
                     {post.featuredImage?.node?.sourceUrl ? (
                       <Image
                         src={post.featuredImage.node.sourceUrl}
@@ -219,8 +219,8 @@ export default async function ManoranjanSection() {
             <div className="space-y-3">
               {businessPosts.slice(0, 4).map((post) => (
                 <Link key={post.id} href={`/post/${post.slug}`} className="group block">
-                  <div className="flex gap-2 hover:bg-gray-50 p-1 rounded transition">
-                    <div className="relative w-16 h-16 shrink-0 rounded overflow-hidden bg-gray-100">
+                  <div className="flex gap-2 hover:bg-gray-50 p-1  transition">
+                    <div className="relative w-16 h-16 shrink-0  overflow-hidden bg-gray-100">
                       <Image
                         src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                         alt={post.title}
@@ -258,8 +258,8 @@ export default async function ManoranjanSection() {
             <div className="space-y-3">
               {lifestylePosts.slice(0, 3).map((post) => (
                 <Link key={post.id} href={`/post/${post.slug}`} className="group block">
-                  <div className="flex gap-2 hover:bg-gray-50 p-1 rounded transition">
-                    <div className="relative w-16 h-16 shrink-0 rounded overflow-hidden bg-gray-100">
+                  <div className="flex gap-2 hover:bg-gray-50 p-1  transition">
+                    <div className="relative w-16 h-16 shrink-0  overflow-hidden bg-gray-100">
                       <Image
                         src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                         alt={post.title}

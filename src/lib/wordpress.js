@@ -984,15 +984,14 @@ export async function getTrendingTags(limit = 20) {
 
 
 
-// lib/wordpress.js - ✅ getBreakingNews
 
 export async function getBreakingNews(limit = 10) {
   const query = `
     query GetBreakingNews {
       posts(
-        first: ${limit},
+        first: ${limit}
         where: {
-          categoryName: "breaking",
+          categoryName: "breaking"
           orderby: { field: DATE, order: DESC }
         }
       ) {
@@ -1002,6 +1001,23 @@ export async function getBreakingNews(limit = 10) {
           slug
           date
           excerpt
+
+          categories {
+            nodes {
+              name
+              slug
+            }
+          }
+
+          featuredImage {
+            node {
+              sourceUrl
+              mediaDetails {
+                width
+                height
+              }
+            }
+          }
         }
       }
     }
@@ -1009,70 +1025,51 @@ export async function getBreakingNews(limit = 10) {
 
   try {
     const response = await fetch(WPGRAPHQL_URL, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ query }),
       next: { revalidate: 60 },
     });
 
     if (!response.ok) {
-      console.error('❌ Response not OK:', response.status);
+      console.error("❌ Response not OK:", response.status);
       return [];
     }
 
     const data = await response.json();
-    
+
     if (data.errors) {
-      console.error('❌ GraphQL Errors:', data.errors);
+      console.error("❌ GraphQL Errors:", data.errors);
       return [];
     }
 
     let posts = data?.data?.posts?.nodes || [];
 
+    // ✅ In categories wali posts ko hata do
+    const excludedCategories = [
+      "video",
+      "podcast",
+      "सोलह-आने-सच",
+      "shorts"
+    ];
+
+    posts = posts.filter((post) => {
+      const slugs =
+        post.categories?.nodes?.map((cat) => cat.slug.toLowerCase()) || [];
+
+      return !excludedCategories.some((slug) => slugs.includes(slug));
+    });
+
     if (posts.length === 0) {
-      console.log('⚠️ No breaking-news found, fetching latest posts...');
+      console.log("⚠️ No breaking news found, fetching latest posts...");
       return await getLatestPosts(limit);
     }
 
     return posts;
   } catch (error) {
-    console.error('❌ Error fetching breaking news:', error);
+    console.error("❌ Error fetching breaking news:", error);
     return await getLatestPosts(limit);
   }
 }
-
-// ✅ Fallback function - Latest posts fetch karega
-// async function getLatestPosts(limit = 10) {
-//   const query = `
-//     query GetLatestPosts {
-//       posts(first: ${limit}, where: { orderby: { field: DATE, order: DESC } }) {
-//         nodes {
-//           id
-//           title
-//           slug
-//           date
-//           excerpt
-//         }
-//       }
-//     }
-//   `;
-
-//   try {
-//     const response = await fetch(WPGRAPHQL_URL, {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: JSON.stringify({ query }),
-//       next: { revalidate: 60 },
-//     });
-
-//     const data = await response.json();
-//     return data?.data?.posts?.nodes || [];
-//   } catch (error) {
-//     console.error('❌ Error fetching latest posts:', error);
-//     return [];
-//   }
-// }

@@ -18,3 +18,72 @@
 .group-marquee:hover .animate-marquee {
   animation-play-state: paused;
 }
+
+
+.google-g path {
+  fill: transparent;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+
+  animation:
+  drawGoogle 2s ease,
+  fillGoogle .4s ease 2s;
+
+animation-iteration-count: infinite;
+animation-duration: 4s;
+}
+
+.google-g path:nth-child(1) {
+  stroke: #4285F4;
+  fill: #4285F4;
+}
+
+.google-g path:nth-child(2) {
+  stroke: #34A853;
+  fill: #34A853;
+}
+
+.google-g path:nth-child(3) {
+  stroke: #FBBC05;
+  fill: #FBBC05;
+}
+
+.google-g path:nth-child(4) {
+  stroke: #EA4335;
+  fill: #EA4335;
+}
+
+.breaking-shape {
+  width: 12px;
+  height: 12px;
+  background: #dc2626;
+  display: inline-block;
+
+  clip-path: polygon(
+    0 0,
+    70% 0,
+    100% 50%,
+    70% 100%,
+    0 100%
+  );
+}
+
+@keyframes drawGoogle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fillGoogle {
+  to {
+    fill-opacity: 1;
+  }
+
+  from {
+    fill-opacity: 0;
+  }
+}

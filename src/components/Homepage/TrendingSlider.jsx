@@ -65,7 +65,7 @@ export default function TrendingSlider() {
   if (!trendingTags.length) return null;
 
   return (
-    <section className="border-t border-zinc-200 bg-white max-w-7xl mx-auto">
+    <section className=" bg-white max-w-7xl mx-auto">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center gap-3">
           {/* Prev Button */}
