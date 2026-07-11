@@ -5,6 +5,7 @@ import "./globals.css";
 import { getHeaderCategories } from "../lib/wordpress";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import BackToTop from '@/components/BackToTop';
 
 const notoSans = Noto_Sans({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default async function RootLayout({ children }) {
         <Header categories={categories} />
         <main className="flex-1">
           {children}
+           <BackToTop />
         </main>
         <Footer />
       </body>

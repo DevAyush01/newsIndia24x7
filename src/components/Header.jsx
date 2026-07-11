@@ -1,4 +1,5 @@
-// components/Header.jsx - Cross button red color fix
+// components/Header.jsx - Fixed Notification Dropdown
+
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -17,7 +18,6 @@ export default function Header({ categories = [] }) {
   const [searchLoading, setSearchLoading] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [notifications, setNotifications] = useState([]);
-  const [notificationCount, setNotificationCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isNotificationLoaded, setIsNotificationLoaded] = useState(false);
   const pathname = usePathname();
@@ -51,10 +51,9 @@ export default function Header({ categories = [] }) {
             }
           }));
           setNotifications(formattedPosts);
-          setNotificationCount(formattedPosts.length);
           setUnreadCount(formattedPosts.length);
-          setIsNotificationLoaded(true);
         }
+        setIsNotificationLoaded(true);
       } catch (error) {
         console.error('Error fetching notifications:', error);
         setIsNotificationLoaded(true);
@@ -209,8 +208,14 @@ export default function Header({ categories = [] }) {
                   href="/live-tv"
                   className="flex items-center gap-1.5 text-[10px] text-white/80 hover:text-white transition-colors font-bold uppercase tracking-wider"
                 >
-                  <Tv size={14} className="text-white/90" />
-                  LIVE
+                  <div className="relative w-5 h-5">
+                    <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5">
+                      <rect x="2" y="5" width="20" height="14" rx="2" stroke="white" strokeWidth="1.8"/>
+                      <path d="M8 19L12 15L16 19" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      <text x="12" y="14" textAnchor="middle" fill="white" fontSize="7" fontWeight="bold" letterSpacing="0.5">LIVE</text>
+                    </svg>
+                  </div>
+                  <span className="sr-only">LIVE</span>
                 </Link>
                 <span className="w-px h-4 bg-white/30"></span>
                 {topBarLinks.map((link) => (
@@ -328,21 +333,29 @@ export default function Header({ categories = [] }) {
                 </ul>
               </nav>
 
-              {/* Right Side - Icons */}
               <div className="flex items-center gap-1">
                 <Link 
                   href="/live-tv"
-                  className="hidden md:flex items-center justify-center w-9 h-9 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
+                  className="flex items-center justify-center w-9 h-9 hover:bg-red-50 rounded-full transition-colors"
                   aria-label="Live TV"
                 >
-                  <Tv size={20} />
-                </Link>
-
-                <Link 
-                  href="/live-tv"
-                  className="md:hidden p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                >
-                  <Tv size={20} />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="20" viewBox="0 0 27.324 21.72">
+                    <defs>
+                      <clipPath id="clipPath">
+                        <rect id="Rectangle_4" data-name="Rectangle 4" width="27.324" height="21.72" fill="none"/>
+                      </clipPath>
+                    </defs>
+                    <g id="Group_4" data-name="Group 4" transform="translate(0 0)">
+                      <g id="Group_3" data-name="Group 3" transform="translate(0 0)" clip-path="url(#clipPath)">
+                        <path id="Path_6" data-name="Path 6" d="M26.745,0H.567A.554.554,0,0,0,0,.567V16.7a.554.554,0,0,0,.567.567H13.048v3.323h-6a.567.567,0,1,0,0,1.135H20.342a.567.567,0,0,0,0-1.135H14.264V17.263H26.745c.324,0,.648-.243.567-.567V.567A.554.554,0,0,0,26.745,0M7.051,20.666a.477.477,0,0,0-.308.133.4.4,0,0,1,.308-.133m13.465.034a.524.524,0,0,0-.173-.034.456.456,0,0,1,.173.034" transform="translate(0 0)" fill="#d71920"/>
+                        <rect id="Rectangle_3" data-name="Rectangle 3" width="24.962" height="14.912" transform="translate(1.182 1.083)" fill="#d71920"/>
+                        <path id="Path_7" data-name="Path 7" d="M5.571,13.322a.226.226,0,0,1-.226-.226V6.941a.226.226,0,0,1,.226-.227H6.45a.22.22,0,0,1,.16.066.216.216,0,0,1,.066.16V12.2H9.668a.227.227,0,0,1,.169.066.231.231,0,0,1,.066.17V13.1a.218.218,0,0,1-.066.16.23.23,0,0,1-.169.066Z" transform="translate(-1.013 -1.273)" fill="#fff"/>
+                        <path id="Path_8" data-name="Path 8" d="M12.326,13.322A.226.226,0,0,1,12.1,13.1V6.941a.226.226,0,0,1,.226-.227h.887a.218.218,0,0,1,.166.066.228.228,0,0,1,.061.16V13.1a.227.227,0,0,1-.061.16.218.218,0,0,1-.166.066Z" transform="translate(-2.294 -1.273)" fill="#fff"/>
+                        <path id="Path_9" data-name="Path 9" d="M17.4,13.322a.343.343,0,0,1-.236-.075.427.427,0,0,1-.122-.189L15.019,7A.225.225,0,0,1,15,6.913a.193.193,0,0,1,.056-.142.2.2,0,0,1,.143-.057h.83a.276.276,0,0,1,.2.071.322.322,0,0,1,.089.137l1.6,4.861,1.595-4.861a.33.33,0,0,1,.089-.137.277.277,0,0,1,.2-.071h.831a.2.2,0,0,1,.137.057.186.186,0,0,1,.062.142A.228.228,0,0,1,20.814,7l-2.02,6.06a.427.427,0,0,1-.122.189.346.346,0,0,1-.237.075Z" transform="translate(-2.843 -1.273)" fill="#fff"/>
+                        <path id="Path_10" data-name="Path 10" d="M23.658,13.322a.226.226,0,0,1-.226-.226V6.951a.23.23,0,0,1,.066-.17.219.219,0,0,1,.16-.066h4.154a.227.227,0,0,1,.236.237v.622a.219.219,0,0,1-.066.16.227.227,0,0,1-.169.066H24.706V9.47h2.9a.24.24,0,0,1,.169.062.215.215,0,0,1,.066.165v.584a.218.218,0,0,1-.066.166.243.243,0,0,1-.169.061h-2.9v1.728h3.181a.233.233,0,0,1,.17.066.23.23,0,0,1,.066.17V13.1a.218.218,0,0,1-.066.16.233.233,0,0,1-.17.066Z" transform="translate(-4.442 -1.273)" fill="#fff"/>
+                      </g>
+                    </g>
+                  </svg>
                 </Link>
 
                 {/* Notification */}
@@ -360,9 +373,10 @@ export default function Header({ categories = [] }) {
                     )}
                   </button>
 
-                  {notificationOpen && isNotificationLoaded && (
+                  {/* ✅ Notification Dropdown - Always render when notificationOpen is true */}
+                  {notificationOpen && (
                     <div className="absolute right-0 top-full mt-2 w-[400px] max-h-[480px] overflow-y-auto overscroll-contain bg-white rounded-2xl shadow-2xl border border-gray-100 z-[200] origin-top-right animate-slide-down">
-                      {/* Header - Sticky */}
+                      {/* Header */}
                       <div className="sticky top-0 z-10 bg-white border-b border-gray-100/80 px-5 py-4 flex items-center justify-between rounded-t-2xl">
                         <div>
                           <h3 className="font-bold text-gray-900 text-lg tracking-tight">NOTIFICATIONS</h3>
@@ -370,7 +384,6 @@ export default function Header({ categories = [] }) {
                             {new Date().toLocaleDateString('hi-IN', { day: 'numeric', month: 'short' })}
                           </p>
                         </div>
-                        {/* ✅ Cross button - Red color with rounded border */}
                         <button
                           onClick={() => setNotificationOpen(false)}
                           className="flex items-center justify-center cursor-pointer w-8 h-8 text-red-600 border-2 border-red-600 hover:bg-red-50 hover:text-red-700 rounded-full transition-colors"
@@ -380,9 +393,9 @@ export default function Header({ categories = [] }) {
                         </button>
                       </div>
 
-                      {/* List - Scrollable with proper spacing */}
+                      {/* List */}
                       <div className="divide-y divide-gray-50">
-                        {notifications.length > 0 ? (
+                        {isNotificationLoaded && notifications.length > 0 ? (
                           notifications.map((post) => (
                             <Link
                               key={post.id}
@@ -419,16 +432,21 @@ export default function Header({ categories = [] }) {
                               </div>
                             </Link>
                           ))
-                        ) : (
+                        ) : isNotificationLoaded && notifications.length === 0 ? (
                           <div className="px-5 py-10 text-center text-gray-400">
                             <Bell size={32} className="mx-auto mb-3 text-gray-300" />
                             <p className="text-sm font-medium">कोई नोटिफिकेशन नहीं</p>
                           </div>
+                        ) : (
+                          <div className="px-5 py-10 text-center text-gray-400">
+                            <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
+                            <p className="text-sm font-medium">लोड हो रहा...</p>
+                          </div>
                         )}
                       </div>
 
-                      {/* Footer - Sticky Bottom */}
-                      {notifications.length > 0 && (
+                      {/* Footer */}
+                      {isNotificationLoaded && notifications.length > 0 && (
                         <div className="sticky bottom-0 z-10 bg-gray-50/80 backdrop-blur-sm border-t border-gray-100/80 px-5 py-3 text-center rounded-b-2xl">
                           <Link
                             href="/latest"

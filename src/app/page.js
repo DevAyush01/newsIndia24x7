@@ -56,6 +56,8 @@ export default async function page() {
       <BadiKhabre/>
       <VideoSection />
       
+      <WebStoriesSection/>
+      {/* <RajyaSection /> */}
       <SportsSection sportsData={sports} />
       
       <ManoranjanSection />
@@ -68,8 +70,6 @@ export default async function page() {
       <WorldSection worldData={world} />
       <TrendingSection/>
       
-      <WebStoriesSection/>
-      <RajyaSection />
       <PodcastSection />
       <CrimeSection />
       <BottomSlider sliderData={allLatest} />

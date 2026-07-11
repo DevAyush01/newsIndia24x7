@@ -1,4 +1,4 @@
-// components/Homepage/VideoSection.jsx - ✅ Center Video Full Width
+// components/Homepage/VideoSection.jsx - ✅ Fully Responsive Video Section
 
 import React from 'react';
 import Image from "next/image";
@@ -79,15 +79,15 @@ export default async function VideoSection() {
   const otherVideos = videos.slice(1, 5);
 
   return (
-    <section className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 py-6">
-      <div className="container max-w-7xl mx-auto px-4">
+    <section className="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 py-4 sm:py-6">
+      <div className="container max-w-7xl mx-auto px-3 sm:px-4">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-5 pb-3">
+        <div className="flex items-center justify-between mb-4 sm:mb-5 pb-2 sm:pb-3">
           <div className="flex items-center gap-2">
-            <div className="w-1 h-6 bg-red-500 rounded-full"></div>
-            <h2 className="text-white text-xl font-bold flex items-center gap-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <div className="w-1 h-4 sm:h-6 bg-red-500 rounded-full"></div>
+            <h2 className="text-white text-base sm:text-xl font-bold flex items-center gap-2">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5v14l11-7z"/>
               </svg>
               वीडियो
@@ -96,24 +96,25 @@ export default async function VideoSection() {
 
           <Link
             href="/videos"
-            className="text-white/80 hover:text-white text-sm font-medium flex items-center gap-1 transition-colors group"
+            className="text-white/80 hover:text-white text-xs sm:text-sm font-medium flex items-center gap-1 transition-colors group"
           >
             सभी वीडियो देखें
-            <svg className="w-4 h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-3 h-3 sm:w-4 sm:h-4 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-0">
+        {/* Mobile Layout: Featured Video on Top, then 2-2 videos grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:gap-0">
           
-        
-          <div className="lg:col-span-1 pr-3 border-r border-white/20">
-            <div className="space-y-3">
+          {/* LEFT - Side Videos (Mobile: Bottom, Desktop: Left) */}
+          <div className="lg:col-span-1 lg:pr-3 lg:border-r border-white/20 order-2 lg:order-1">
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 lg:gap-3">
               {otherVideos.slice(0, 2).map((video) => (
                 <Link key={video.id} href={`/video/${video.slug}`} className="group block">
                   <div className="relative overflow-hidden">
-                    <div className="relative aspect-video h-[120px]">
+                    <div className="relative aspect-video h-[100px] sm:h-[120px]">
                       <Image
                         src={video.thumbnailUrl}
                         alt={video.title}
@@ -121,14 +122,14 @@ export default async function VideoSection() {
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-red-600 flex items-center justify-center">
+                          <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z"/>
                           </svg>
                         </div>
                       </div>
                     </div>
-                    <h3 className="text-white text-sm font-semibold mt-2 line-clamp-3">
+                    <h3 className="text-white text-xs sm:text-sm font-semibold mt-1 sm:mt-2 line-clamp-3 sm:line-clamp-3">
                       {video.title}
                     </h3>
                   </div>
@@ -137,9 +138,9 @@ export default async function VideoSection() {
             </div>
           </div>
 
-      
+          {/* CENTER - Featured Video (Mobile: Top, Desktop: Center) */}
           {featuredVideo && (
-            <div className="lg:col-span-3 px-4 border-r border-white/20 flex items-center justify-center">
+            <div className="lg:col-span-3 lg:px-4 lg:border-r border-white/20 flex items-center justify-center order-1 lg:order-2">
               <Link
                 href={`/video/${featuredVideo.slug}`}
                 className="group block w-full"
@@ -154,14 +155,14 @@ export default async function VideoSection() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"/>
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-14 h-14 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                        <svg className="w-7 h-7 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-red-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                        <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white ml-0.5 sm:ml-1" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                       </div>
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="text-white text-lg md:text-xl font-bold line-clamp-2">
+                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4">
+                      <h3 className="text-white text-sm sm:text-base md:text-lg lg:text-xl font-bold line-clamp-2">
                         {featuredVideo.title}
                       </h3>
                     </div>
@@ -171,13 +172,13 @@ export default async function VideoSection() {
             </div>
           )}
 
-        
-          <div className="lg:col-span-1 pl-3">
-            <div className="space-y-3">
+          {/* RIGHT - Side Videos (Mobile: Bottom, Desktop: Right) */}
+          <div className="lg:col-span-1 lg:pl-3 order-3">
+            <div className="grid grid-cols-2 lg:grid-cols-1 gap-3 lg:gap-3">
               {otherVideos.slice(2, 4).map((video) => (
                 <Link key={video.id} href={`/video/${video.slug}`} className="group block">
                   <div>
-                    <div className="relative aspect-video h-[120px]">
+                    <div className="relative aspect-video h-[100px] sm:h-[120px]">
                       <Image
                         src={video.thumbnailUrl}
                         alt={video.title}
@@ -185,14 +186,14 @@ export default async function VideoSection() {
                         className="object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center">
-                          <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-red-600 flex items-center justify-center">
+                          <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M8 5v14l11-7z"/>
                           </svg>
                         </div>
                       </div>
                     </div>
-                    <h3 className="text-white text-sm font-semibold mt-2 line-clamp-3">
+                    <h3 className="text-white text-xs sm:text-sm font-semibold mt-1 sm:mt-2 line-clamp-3 sm:line-clamp-3">
                       {video.title}
                     </h3>
                   </div>

@@ -62,8 +62,8 @@ export default async function FirstTopSection() {
             </Link>
           )}
 
-          {/* Recent Posts - Grid with 2 columns with border below each post */}
-          <div className="mt-6 grid grid-cols-2 gap-x-8 gap-y-4">
+          {/* Recent Posts - Mobile: 1 column, Desktop: 2 columns */}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 sm:px-0 px-2">
             {recentPosts.map((post) => (
               <div key={post.id} className="border-b border-gray-200 pb-3">
                 <Link href={`/post/${post.slug}`}>
@@ -90,7 +90,7 @@ export default async function FirstTopSection() {
         </div>
 
         {/* CENTER - Superfast News */}
-        <div className="col-span-12 md:col-span-3 lg:col-span-3">
+        <div className="col-span-12 md:col-span-3 lg:col-span-3 sm:px-0 px-2">
           <div className="overflow-hidden bg-white rounded-sm">
             <div className="flex items-center justify-between px-3 py-2 bg-white">
               <div className="flex items-end gap-1">
@@ -141,7 +141,7 @@ export default async function FirstTopSection() {
 
             {superfastNews.slice(1, 10).map((post) => (
               <Link key={post.id} href={`/post/${post.slug}`}>
-                <article className="group flex gap-4 py-4 hover:bg-red-50 transition-colors border-b border-gray-200">
+                <article className="group sm:px-0 px-2 flex gap-4 py-4 hover:bg-red-50 transition-colors border-b border-gray-200">
                   <div className="relative h-17 w-28 shrink-0 overflow-hidden bg-gray-100">
                     <Image
                       src={post.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
@@ -167,7 +167,7 @@ export default async function FirstTopSection() {
         </div>
 
         {/* RIGHT */}
-        <div className="col-span-12 md:col-span-3 lg:col-span-3 space-y-4">
+        <div className="col-span-12 md:col-span-3 lg:col-span-3 space-y-4 sm:px-0 px-2">
           <div className="rounded-sm border border-gray-200 overflow-hidden bg-white shadow-sm">
             <div className="bg-red-600 px-3 py-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -239,8 +239,8 @@ export default async function FirstTopSection() {
           {upNews.length > 0 && (
             <div className="space-y-6 mt-10">
               {upNews.slice(0, 3).map((post) => (
-                <Link key={post.id} href={`/post/${post.slug}`  }     className="block mb-4">
-                  <div className="group relative w-full aspect-[16/9] overflow-hidden  bg-gray-100 cursor-pointer">
+                <Link key={post.id} href={`/post/${post.slug}`} className="block">
+                  <div className="group relative w-full aspect-[16/9] overflow-hidden bg-gray-100 cursor-pointer">
                     {/* Full Width Image */}
                     {post.featuredImage?.node?.sourceUrl ? (
                       <Image
