@@ -61,7 +61,7 @@ export default async function BadiKhabre() {
                       </div>
                     )}
                   </div>
-                  <h3 className="mt-2 sm:mt-3 text-[13px] sm:text-[15px] p-2 font-bold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-4 sm:line-clamp-6">
+                  <h3 className="mt-2 sm:mt-3 text-[15px] sm:text-[15px] p-2 font-bold text-gray-900 group-hover:text-red-600 transition-colors line-clamp-4 sm:line-clamp-6">
                     {post.title}
                   </h3>
                 </article>
@@ -98,7 +98,7 @@ export default async function BadiKhabre() {
                         </div>
                       )}
                     </div>
-                    <h3 className="text-xs sm:text-sm font-bold leading-5 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-3">
+                    <h3 className="text-sm sm:text-sm font-bold leading-5 text-gray-900 group-hover:text-red-600 transition-colors line-clamp-3">
                       {post.title}
                     </h3>
                   </div>

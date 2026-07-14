@@ -58,20 +58,20 @@ export default async function page() {
       
       <WebStoriesSection/>
       {/* <RajyaSection /> */}
-      <SportsSection sportsData={sports} />
+      {/* <CrimeSection /> */}
+      {/* <SportsSection sportsData={sports} /> */}
       
-      <ManoranjanSection />
+      {/* <ManoranjanSection /> */}
       
-      <DharmSection 
+      {/* <DharmSection 
         religiousData={religious} 
         rasifalData={rasifal} 
-      />
+      /> */}
       
-      <WorldSection worldData={world} />
+      {/* <WorldSection worldData={world} /> */}
       <TrendingSection/>
       
       <PodcastSection />
-      <CrimeSection />
       <BottomSlider sliderData={allLatest} />
       
       <TravelSection travelData={allTravelData} />

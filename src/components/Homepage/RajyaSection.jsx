@@ -1,5 +1,3 @@
-// components/Homepage/RajyaSection.jsx - ✅ Client Component with Tab Switching
-
 "use client";
 
 import React, { useState } from 'react';
@@ -41,10 +39,10 @@ export default function RajyaSection({ states, allPostsData }) {
   }
 
   return (
-    <section className="w-full py-5 bg-white overflow-hidden">
+    <section className="w-full pt-2 bg-white border-b border-gray-300 overflow-hidden">
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 px-5 pt-2">
+      <div className="flex items-center justify-between mb-3  pt-2">
         <div className="flex items-center gap-2">
           <span className="w-0 h-0 border-t-[8px] border-b-[8px] border-l-[12px] border-t-transparent border-b-transparent border-l-red-600" />
           <h2 className="text-[20px] font-bold text-black">राज्यवार खबरें</h2>

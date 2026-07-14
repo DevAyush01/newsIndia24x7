@@ -1,125 +1,135 @@
-// components/Homepage/WorldSection.jsx
+// components/Homepage/WorldSection.jsx - ✅ Updated with Desh/Crime Style
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function WorldSection({ worldData }) {
-  // Agar data nahi hai toh empty state
   if (!worldData || worldData.length === 0) {
-    return (
-      <div className="container mx-auto px-4 py-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="flex items-center justify-between border-b-2 border-cyan-600 pb-3 mb-4">
-            <h2 className="text-2xl font-bold text-cyan-600">विश्व / World</h2>
-            <Link 
-              href="/category/world" 
-              className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
-            >
-              और देखें →
-            </Link>
-          </div>
-          <p className="text-gray-500 text-center py-8">कोई विश्व समाचार उपलब्ध नहीं है</p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
-  const mainPost = worldData[0];
-  const otherPosts = worldData.slice(1, 5);
-
   return (
-    <div className="container mx-auto max-w-7xl px-4 py-6">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        
-        {/* Header */}
-        <div className="flex items-center justify-between border-b-2 border-cyan-600 px-6 py-3">
-          <h2 className="text-2xl font-bold text-cyan-600">विश्व / World</h2>
-          <Link 
-            href="/category/world" 
-            className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center gap-1"
-          >
-            और देखें →
-          </Link>
+    <section className="w-full  bg-white overflow-hidden">
+      
+      {/* Header - Desh Style */}
+      <div className="flex items-center justify-between mb-3  ">
+        <div className="flex items-center gap-2">
+          <div className="w-0 h-0 border-t-[7px] border-b-[7px] border-l-[12px] border-t-transparent border-b-transparent border-l-red-600" />
+          <h2 className="text-[20px] font-bold text-black">विश्व</h2>
         </div>
+        <Link
+          href="/category/world"
+          className="text-red-600 text-sm font-semibold hover:text-red-700 transition flex items-center gap-1 group"
+        >
+          और भी
+         <span className="group-hover:translate-x-1 transition">→</span>
+        </Link>
+      </div>
 
-        {/* Main Content */}
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Main Post */}
-            <div className="md:col-span-2">
-              <Link href={`/post/${mainPost.slug}`} className="block group">
-                <div className="relative w-full h-64 md:h-72 bg-gray-200 rounded-lg overflow-hidden">
-                  {mainPost.featuredImage?.node?.sourceUrl ? (
+      <div className="space-y-5">
+
+        {/* TOP SECTION */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+          {/* BIG NEWS - Featured */}
+          {worldData[0] && (
+            <Link
+              href={`/post/${worldData[0].slug}`}
+              className="group block"
+            >
+              <div className="relative h-[250px] overflow-hidden">
+                {worldData[0].featuredImage?.node?.sourceUrl ? (
+                  <>
                     <Image
-                      src={mainPost.featuredImage.node.sourceUrl}
-                      alt={mainPost.title}
+                      src={worldData[0].featuredImage.node.sourceUrl}
+                      alt={worldData[0].title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="100vw"
                     />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-cyan-50 to-blue-50">
-                      <span className="text-4xl text-gray-400">🌍</span>
-                    </div>
-                  )}
-                  <span className="absolute top-3 left-3 bg-cyan-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    विश्व
-                  </span>
-                </div>
-                <h3 className="text-xl font-bold mt-3 group-hover:text-cyan-600 transition-colors line-clamp-2">
-                  {mainPost.title}
-                </h3>
-                {mainPost.excerpt && (
-                  <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                    {mainPost.excerpt.replace(/<[^>]*>/g, '')}
-                  </p>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  </>
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-cyan-800 to-blue-700 flex items-center justify-center">
+                  </div>
                 )}
-                <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
-                  <span>{new Date(mainPost.date).toLocaleDateString('hi-IN', { 
-                    day: 'numeric', 
-                    month: 'short', 
-                    year: 'numeric' 
-                  })}</span>
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <h3 className="text-white text-[21px] font-bold">
+                    {worldData[0].title}
+                  </h3>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {/* RIGHT SIDE - 2 Small News */}
+          <div className="flex flex-col">
+            {worldData.slice(1, 3).map((post, index) => (
+              <Link
+                key={post.id}
+                href={`/post/${post.slug}`}
+                className={`group ${
+                  index === 0 ? "pb-4 border-b border-gray-200" : "pt-4"
+                }`}
+              >
+                <div className="flex gap-4">
+                  <div className="relative w-[165px] h-[109px] shrink-0 overflow-hidden">
+                    {post.featuredImage?.node?.sourceUrl ? (
+                      <Image
+                        src={post.featuredImage.node.sourceUrl}
+                        alt={post.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        sizes="165px"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="text-[17px] font-extrabold text-black group-hover:text-red-600">
+                    {post.title}
+                  </h3>
                 </div>
               </Link>
-            </div>
-
-            {/* Side Posts */}
-            <div className="space-y-4">
-              {otherPosts.map((post) => (
-                <Link key={post.id} href={`/post/${post.slug}`} className="block group">
-                  <div className="flex gap-3 hover:bg-gray-50 p-2 rounded-lg transition-colors">
-                    <div className="relative w-24 h-20 flex-shrink-0 bg-gray-200 rounded overflow-hidden">
-                      {post.featuredImage?.node?.sourceUrl ? (
-                        <Image
-                          src={post.featuredImage.node.sourceUrl}
-                          alt={post.title}
-                          fill
-                          className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center bg-gray-100">
-                          <span className="text-xl text-gray-400">🌍</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-semibold group-hover:text-cyan-600 transition-colors line-clamp-2">
-                        {post.title}
-                      </h4>
-                      <span className="text-xs text-gray-400">
-                        {new Date(post.date).toLocaleDateString('hi-IN', { 
-                          day: 'numeric', 
-                          month: 'short' 
-                        })}
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
+            ))}
           </div>
+
         </div>
+
+        {/* BOTTOM SECTION - 2 News */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 border-t border-gray-200 pt-5">
+          {worldData.slice(3, 5).map((post) => (
+            <Link
+              key={post.id}
+              href={`/post/${post.slug}`}
+              className="group"
+            >
+              <div className="flex gap-4">
+                <div className="relative w-[165px] h-[109px] shrink-0 overflow-hidden">
+                  {post.featuredImage?.node?.sourceUrl ? (
+                    <Image
+                      src={post.featuredImage.node.sourceUrl}
+                      alt={post.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                      sizes="165px"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center">
+                    </div>
+                  )}
+                </div>
+                <h3 className="text-[18px] leading-7 font-bold text-black group-hover:text-red-600">
+                  {post.title}
+                </h3>
+              </div>
+            </Link>
+          ))}
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 }

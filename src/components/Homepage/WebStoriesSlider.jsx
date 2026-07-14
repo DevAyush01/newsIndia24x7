@@ -131,7 +131,7 @@ export default function WebStoriesSlider({ stories }) {
                 </div>
 
                 <div className="px-2 py-2">
-  <h3 className="text-[12px] font-bold leading-5 line-clamp-3 text-black">
+  <h3 className="text-[15px] sm:text-[13px] font-bold leading-5 line-clamp-3 text-black">
                     {title}
                   </h3>
                 </div>

@@ -136,7 +136,7 @@ export default async function TrendingSection() {
 
         {/* RIGHT SECTION - Trending Tags (30% width) */}
         <div className="lg:w-[30%]">
-          <div className="sticky top-24 bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          <div className="sticky top-24 bg-white border border-gray-200  overflow-hidden">
             
             {/* Header */}
             <div className="bg-gradient-to-r from-red-600 to-red-700 px-4 py-3">
@@ -191,33 +191,7 @@ export default async function TrendingSection() {
 
               
             </div>
-            <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
-            <div className="bg-gradient-to-r from-red-600 to-red-700 px-4 py-2.5 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
-                <span className="text-white font-bold text-sm tracking-wide">
-                  NewsIndia24x7
-                </span>
-              </div>
-              <span className="bg-white/20 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full animate-pulse">
-                LIVE
-              </span>
-            </div>
-
-            <div className="relative bg-black">
-              <iframe
-                src="https://www.youtube.com/embed/fy3C4GF43Io?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
-                className="w-full aspect-video"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay"
-                allowFullScreen
-                title="NewsIndia24x7 Live TV"
-                loading="lazy"
-              ></iframe>
-            </div>
-          </div>
+           
           </div>
           
         </div>
