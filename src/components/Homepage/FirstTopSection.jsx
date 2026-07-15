@@ -1,3 +1,5 @@
+// components/Homepage/FirstTopSection.jsx - ✅ Fixed Superfast Section
+
 import Image from "next/image";
 import Link from "next/link";
 import { getHomeTopSection, getBreakingNews, getPostsByCategory } from "@/lib/wordpress";
@@ -93,7 +95,7 @@ export default async function FirstTopSection() {
         <div className="col-span-12 md:col-span-3 lg:col-span-3 sm:px-0 px-2">
           <div className="overflow-hidden bg-white rounded-sm">
             <div className="flex items-center justify-between px-3 py-2 bg-white">
-              <div className="flex items-end gap-1">
+              <Link href="/superfast" className="flex items-end gap-1 hover:opacity-80 transition">
                 <div className="flex flex-col leading-none">
                   <span className="text-red-600 font-black text-[20px] tracking-tighter leading-none" style={{ fontStyle: "italic" }}>
                     सुपरफास्ट
@@ -107,16 +109,18 @@ export default async function FirstTopSection() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </Link>
               <span className="text-gray-400 text-[11px] leading-tight text-right max-w-[130px]">
                 सबसे कम समय में सबसे ज़्यादा खबरें...
               </span>
             </div>
 
+            {/* Featured Post - Click on image goes to Superfast Slider, Button goes to Detail */}
             {superfastNews[0] && (
-              <Link href={`/post/${superfastNews[0].slug}`}>
-                <article className="group border-b border-gray-200">
-                  <div className="relative w-full h-[180px] overflow-hidden bg-gray-100">
+              <div className="border-b border-gray-200">
+                {/* Image - Click goes to Superfast Slider with this post */}
+                <Link href={`/superfast?post=${superfastNews[0].slug}`}>
+                  <div className="relative w-full h-[180px] overflow-hidden bg-gray-100 cursor-pointer group">
                     <Image
                       src={superfastNews[0].featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
                       alt={superfastNews[0].title}
@@ -124,21 +128,40 @@ export default async function FirstTopSection() {
                       className="object-fill transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                  </div>
-                  <div className="px-3 py-2.5">
-                    <h3 className="text-lg font-bold leading-snug text-gray-900 group-hover:text-red-600 line-clamp-2">
-                      {superfastNews[0].title}
-                    </h3>
-                    {superfastNews[0].date && (
-                      <span className="text-[10px] text-gray-400 mt-0.5 block">
-                        {new Date(superfastNews[0].date).toLocaleDateString("hi-IN")}
+                    {/* Category Badge on Image */}
+                    {superfastNews[0].categories?.nodes?.[0] && (
+                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
+                        {superfastNews[0].categories.nodes[0].name}
                       </span>
                     )}
+                    
                   </div>
-                </article>
-              </Link>
+                </Link>
+                
+                <div className="px-3 py-2.5">
+                  {/* Title with link to detail page */}
+                  <Link href={`/post/${superfastNews[0].slug}`}>
+                    <h3 className="text-lg font-bold leading-snug text-gray-900 hover:text-red-600 transition line-clamp-2">
+                      {superfastNews[0].title}
+                    </h3>
+                  </Link>
+                  {superfastNews[0].date && (
+                    <span className="text-[10px] text-gray-400 mt-0.5 block">
+                      {new Date(superfastNews[0].date).toLocaleDateString("hi-IN")}
+                    </span>
+                  )}
+                  {/* ✅ Extra Button - Detail Page */}
+                  <Link 
+                    href={`/post/${superfastNews[0].slug}`}
+                    className="inline-block mt-2 text-[11px] font-semibold text-red-600 hover:text-red-700 transition hover:underline"
+                  >
+                    पूरी खबर पढ़ें →
+                  </Link>
+                </div>
+              </div>
             )}
 
+            {/* Other Superfast News */}
             {superfastNews.slice(1, 10).map((post) => (
               <Link key={post.id} href={`/post/${post.slug}`}>
                 <article className="group sm:px-0 px-2 flex gap-4 py-4 hover:bg-red-50 transition-colors border-b border-gray-200">

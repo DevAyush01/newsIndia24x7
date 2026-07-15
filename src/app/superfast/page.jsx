@@ -1,12 +1,14 @@
-import React from 'react'
+// app/superfast/page.jsx
+import React from 'react';
 import { getPostsByCategory } from "@/lib/wordpress";
-import LatestPostsSlider from '@/components/Homepage/LatestPostsSlider';
+import SuperfastSlider from '@/components/Homepage/SuperfastSlider';
 
-export default async function page() {
-    const posts = await getPostsByCategory("", 10);
-  return (
-     <main className="min-h-screen bg-gray-50">
-       <LatestPostsSlider posts={posts} />
-  </main>
-  )
+export default async function SuperfastPage({ searchParams }) {
+    const params = await searchParams;
+    const posts = await getPostsByCategory("", 20);
+    const postSlug = params?.post || null;
+    
+    return (
+        <SuperfastSlider posts={posts} initialSlug={postSlug} />
+    );
 }

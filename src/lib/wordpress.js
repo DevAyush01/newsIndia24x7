@@ -246,7 +246,10 @@ export async function getHomeTopSection() {
   };
 }
 
-// ✅ DYNAMIC FUNCTION - Kisi bhi category se data lao
+
+// lib/wordpress.js - ✅ FIXED getPostsByCategory with categories
+
+// ✅ DYNAMIC FUNCTION - Kisi bhi category se data lao (WITH CATEGORIES)
 export async function getPostsByCategory(categorySlug, limit = 10) {
   const query = `
     query GetPostsByCategory {
@@ -260,6 +263,12 @@ export async function getPostsByCategory(categorySlug, limit = 10) {
           featuredImage {
             node {
               sourceUrl
+            }
+          }
+          categories {
+            nodes {
+              name
+              slug
             }
           }
         }
@@ -277,14 +286,24 @@ export async function getPostsByCategory(categorySlug, limit = 10) {
       next: { revalidate: 60 },
     });
 
+    if (!res.ok) {
+      console.error('❌ Response not OK:', res.status);
+      return [];
+    }
+
     const data = await res.json();
+    
+    if (data.errors) {
+      console.error('❌ GraphQL Errors:', data.errors);
+      return [];
+    }
+
     return data?.data?.posts?.nodes || [];
   } catch (error) {
     console.error(`Error fetching posts for category ${categorySlug}:`, error);
     return [];
   }
 }
-
 // ✅ SPECIFIC FUNCTIONS (using the dynamic one)
 export async function getSportsPosts(limit = 9) {
   return getPostsByCategory('sports', limit);
