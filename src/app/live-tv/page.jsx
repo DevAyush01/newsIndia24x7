@@ -77,7 +77,7 @@ export default function LiveTvPage() {
           <div className="relative bg-black overflow-hidden border border-gray-200">
             <div className="aspect-video">
               <iframe
-                src="https://www.youtube.com/embed/fy3C4GF43Io?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
+                src="https://www.youtube.com/embed/VECLDoKDOOk?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
                 className="w-full h-full"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay"
                 allowFullScreen

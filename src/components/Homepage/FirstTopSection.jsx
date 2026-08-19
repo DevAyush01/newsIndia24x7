@@ -240,7 +240,7 @@ const liveTvNews = [...(data.featured || []), ...(data.latest || [])].slice(0, 4
             </div>
             <div className="relative bg-black">
               <iframe
-                src="https://www.youtube.com/embed/fy3C4GF43Io?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
+                src="https://www.youtube.com/embed/VECLDoKDOOk?autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
                 className="w-full aspect-video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; autoplay"
                 allowFullScreen
