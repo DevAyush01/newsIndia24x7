@@ -1,21 +1,68 @@
-// components/Homepage/FirstTopSection.jsx - ✅ Fixed Superfast Section
+// components/Homepage/FirstTopSection.jsx - ✅ Fixed (Duplicate Removed)
 
 import Image from "next/image";
 import Link from "next/link";
-import { getHomeTopSection, getBreakingNews, getPostsByCategory } from "@/lib/wordpress";
+import { getHomeTopSection, getBreakingNews, getPostsByCategory , getMiddleSectionPosts  } from "@/lib/wordpress";
 import BreakingSlider from "./BreakingSlider";
 
 export default async function FirstTopSection() {
   const data = await getHomeTopSection();
   const breakingNews = await getBreakingNews(8);
   
+
+
+    const middlePosts = await getMiddleSectionPosts(15)
+
   // ✅ Uttar Pradesh category se 3 news fetch karo
   const upNews = await getPostsByCategory("uttar-pradesh", 3);
 
-  const latestPost = data.hero;
+  // ✅ VIDEO CATEGORY SLUGS
+  const VIDEO_CATEGORY_SLUGS = ["video", "वात-इंडिया-की"];
   
-  // ✅ FIX: 8 posts chahiye, filter ke baad bhi 8
-  let recentPosts = data.latest?.filter((post) => post.id !== latestPost?.id) || [];
+  // ✅ CHECK - Kya post video category ki hai?
+  const isVideoCategory = (post) => {
+    if (!post) return false;
+    if (!post.categories?.nodes || post.categories.nodes.length === 0) return false;
+    return post.categories.nodes.some(
+      (cat) => VIDEO_CATEGORY_SLUGS.includes(cat.slug?.toLowerCase?.() || cat.slug || "")
+    );
+  };
+
+  const filterOutVideo = (posts) => {
+    if (!posts || !Array.isArray(posts)) return [];
+    return posts.filter((post) => {
+      if (!post.categories?.nodes || post.categories.nodes.length === 0) {
+        return true;
+      }
+      const hasVideoCategory = post.categories.nodes.some(
+        (cat) => VIDEO_CATEGORY_SLUGS.includes(cat.slug?.toLowerCase?.() || cat.slug || "")
+      );
+      return !hasVideoCategory;
+    });
+  };
+
+  // ✅ HERO POST - Agar video category ki hai toh second latest (filtered) se replace karo
+  let latestPost = data.hero;
+  
+  // Agar hero video category ki hai toh filtered latest mein se pehli post lo
+  if (isVideoCategory(latestPost)) {
+    const filteredLatest = filterOutVideo(data.latest);
+    // Filtered latest mein se pehli post jo hero nahi hai
+    const replacementPost = filteredLatest.find(post => post.id !== latestPost?.id);
+    if (replacementPost) {
+      latestPost = replacementPost;
+    } else {
+      // Agar filtered latest mein koi post nahi hai toh featured se lo
+      const featuredPost = data.featured?.find(post => post.id !== latestPost?.id);
+      if (featuredPost) {
+        latestPost = featuredPost;
+      }
+    }
+  }
+  
+  let filteredLatest = filterOutVideo(data.latest);
+  let recentPosts = filteredLatest.filter((post) => post.id !== latestPost?.id) || [];
+  recentPosts = recentPosts.slice(0, 8); 
   
   // ✅ Agar 8 se kam hain toh aur posts add karo (featured se)
   if (recentPosts.length < 8) {
@@ -28,43 +75,52 @@ export default async function FirstTopSection() {
   // ✅ Sirf 8 posts lo
   recentPosts = recentPosts.slice(0, 8);
 
-  const superfastNews = [...(data.featured || []), ...(data.latest || [])].slice(0, 11);
-  const liveTvNews = [...(data.featured || []), ...(data.latest || [])].slice(0, 4);
+  let filteredFeatured = filterOutVideo(data.featured);
+
+// ============================================================
+// 🔥 YAHAN SE CHANGE SHURU HOTA HAI (DUPLICATE REMOVE LOGIC)
+// ============================================================
+
+// ✅ 1. Pehle Left section ki un posts ke IDs ka array banao jo already display ho rahi hain
+const recentPostIds = recentPosts.map(p => p.id);
+
+const superfastNews = middlePosts
+  .filter(post => !recentPostIds.includes(post.id))
+  .slice(0, 11);
+
+
+// ✅ Trending mein Featured + Latest (video allowed)
+const liveTvNews = [...(data.featured || []), ...(data.latest || [])].slice(0, 4);
 
   return (
     <section className="container max-w-7xl mx-auto py-4">
       <div className="grid grid-cols-12 gap-4">
         {/* LEFT */}
         <div className="col-span-12 md:col-span-6 lg:col-span-6">
-          {latestPost && (
-            <Link href={`/post/${latestPost.slug}`}>
-              <article className="group cursor-pointer bg-gray-100 p-1">
-                <h1 className="mt-3 text-lg md:text-2xl font-extrabold leading-snug [word-spacing:6px] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-3">
-                  {latestPost.title}
-                </h1>
-                <div className="relative w-full aspect-3/2 overflow-hidden bg-gray-200 shadow">
-                  <Image
-                    src={latestPost.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
-                    alt={latestPost.title}
-                    fill
-                    className="object-fill transition-transform duration-500 group-hover:scale-105"
-                    priority
-                  />
-                  {latestPost.categories?.nodes?.[0] && (
-                    <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-extrabold px-2 py-0.5 uppercase tracking-wider rounded-sm">
-                      {latestPost.categories.nodes[0].name}
-                    </span>
-                  )}
-                </div>
-                <div
-                  className="mt-1.5 text-[13px] px-1 leading-relaxed text-gray-500 line-clamp-2"
-                  dangerouslySetInnerHTML={{ __html: latestPost.excerpt }}
-                />
-              </article>        
-            </Link>
-          )}
+         {latestPost && (
+  <Link href={`/post/${latestPost.slug}`}>
+    <article className="group cursor-pointer bg-gray-100 p-1">
+      <h1 className="mt-3 text-lg md:text-2xl font-extrabold leading-snug [word-spacing:6px] text-gray-900 group-hover:text-red-600 transition-colors line-clamp-3">
+        {latestPost.title}
+      </h1>
+      <div className="relative w-full aspect-3/2 overflow-hidden bg-gray-200 shadow">
+        <Image
+          src={latestPost.featuredImage?.node?.sourceUrl || "/placeholder.jpg"}
+          alt={latestPost.title}
+          fill
+          className="object-fill transition-transform duration-500 group-hover:scale-105"
+          priority
+        />
+      </div>
+      <div
+        className="mt-1.5 text-[13px] px-1 leading-relaxed text-gray-500 line-clamp-2"
+        dangerouslySetInnerHTML={{ __html: latestPost.excerpt || "" }}
+      />
+    </article>        
+  </Link>
+)}
 
-          {/* Recent Posts - Mobile: 1 column, Desktop: 2 columns */}
+          {/* Recent Posts */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 sm:px-0 px-2">
             {recentPosts.map((post) => (
               <div key={post.id} className="border-b border-gray-200 pb-3">
@@ -87,7 +143,7 @@ export default async function FirstTopSection() {
             ))}
           </div>
 
-          {/* BREAKING SECTION - Slider with Images */}
+          {/* BREAKING SECTION */}
           <BreakingSlider breakingNews={breakingNews} />
         </div>
 
@@ -115,10 +171,8 @@ export default async function FirstTopSection() {
               </span>
             </div>
 
-            {/* Featured Post - Click on image goes to Superfast Slider, Button goes to Detail */}
             {superfastNews[0] && (
               <div className="border-b border-gray-200">
-                {/* Image - Click goes to Superfast Slider with this post */}
                 <Link href={`/superfast?post=${superfastNews[0].slug}`}>
                   <div className="relative w-full h-[180px] overflow-hidden bg-gray-100 cursor-pointer group">
                     <Image
@@ -128,18 +182,10 @@ export default async function FirstTopSection() {
                       className="object-fill transition-transform duration-500 group-hover:scale-105"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
-                    {/* Category Badge on Image */}
-                    {superfastNews[0].categories?.nodes?.[0] && (
-                      <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-sm">
-                        {superfastNews[0].categories.nodes[0].name}
-                      </span>
-                    )}
-                    
                   </div>
                 </Link>
                 
                 <div className="px-3 py-2.5">
-                  {/* Title with link to detail page */}
                   <Link href={`/post/${superfastNews[0].slug}`}>
                     <h3 className="text-lg font-bold leading-snug text-gray-900 hover:text-red-600 transition line-clamp-2">
                       {superfastNews[0].title}
@@ -150,7 +196,6 @@ export default async function FirstTopSection() {
                       {new Date(superfastNews[0].date).toLocaleDateString("hi-IN")}
                     </span>
                   )}
-                  {/* ✅ Extra Button - Detail Page */}
                   <Link 
                     href={`/post/${superfastNews[0].slug}`}
                     className="inline-block mt-2 text-[11px] font-semibold text-red-600 hover:text-red-700 transition hover:underline"
@@ -161,7 +206,6 @@ export default async function FirstTopSection() {
               </div>
             )}
 
-            {/* Other Superfast News */}
             {superfastNews.slice(1, 10).map((post) => (
               <Link key={post.id} href={`/post/${post.slug}`}>
                 <article className="group sm:px-0 px-2 flex gap-4 py-4 hover:bg-red-50 transition-colors border-b border-gray-200">
@@ -177,11 +221,7 @@ export default async function FirstTopSection() {
                     <h3 className="text-[15px] font-medium leading-relaxed text-gray-800 group-hover:text-red-600 line-clamp-3">
                       {post.title}
                     </h3>
-                    {post.date && (
-                      <span className="text-[10px] text-gray-400 mt-0.5 block">
-                        {new Date(post.date).toLocaleDateString("hi-IN")}
-                      </span>
-                    )}
+                   
                   </div>
                 </article>
               </Link>
@@ -258,13 +298,11 @@ export default async function FirstTopSection() {
             </a>
           </div>
 
-          {/* ✅ Uttar Pradesh News - Full width image with title overlay */}
           {upNews.length > 0 && (
             <div className="space-y-6 mt-10">
               {upNews.slice(0, 3).map((post) => (
                 <Link key={post.id} href={`/post/${post.slug}`} className="block">
                   <div className="group relative w-full aspect-[16/9] overflow-hidden bg-gray-100 cursor-pointer">
-                    {/* Full Width Image */}
                     {post.featuredImage?.node?.sourceUrl ? (
                       <Image
                         src={post.featuredImage.node.sourceUrl}
@@ -277,9 +315,7 @@ export default async function FirstTopSection() {
                         <span className="text-gray-500 text-xs">No Image</span>
                       </div>
                     )}
-                    {/* Dark Overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                    {/* Title on top of image - Bottom */}
                     <div className="absolute bottom-0 left-0 right-0 p-3">
                       <h3 className="text-white text-sm font-bold leading-snug line-clamp-2 group-hover:text-red-400 transition-colors">
                         {post.title}

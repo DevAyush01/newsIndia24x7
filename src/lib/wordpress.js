@@ -179,7 +179,10 @@ export async function graphqlQuery(query, variables = {}) {
 export async function getHomeTopSection() {
   const query = `
     query HomeTopSection {
-      hero: posts(first: 1) {
+      hero: posts(
+        first: 1
+        where: { orderby: { field: DATE, order: DESC } }
+      ) {
         nodes {
           id
           title
@@ -191,36 +194,62 @@ export async function getHomeTopSection() {
               sourceUrl
             }
           }
+          categories {
+            nodes {
+              name
+              slug
+            }
+          }
         }
       }
 
       latest: posts(
-        first: 8
-        where: { categoryName: "News Latest" }
+        first: 20
+        where: { 
+          categoryIn: ["breaking", "trending", "news-latest"]
+          orderby: { field: DATE, order: DESC }
+        }
       ) {
         nodes {
           id
           title
           slug
+          date
           featuredImage {
             node {
               sourceUrl
+            }
+          }
+          categories {
+            nodes {
+              name
+              slug
             }
           }
         }
       }
 
       featured: posts(
-        first: 6
-        where: { categoryName: "News Featured" }
+        first: 10
+        where: { 
+          categoryName: "News Featured"
+          orderby: { field: DATE, order: DESC }
+        }
       ) {
         nodes {
           id
           title
           slug
+          date
           featuredImage {
             node {
               sourceUrl
+            }
+          }
+          categories {
+            nodes {
+              name
+              slug
             }
           }
         }
@@ -239,11 +268,85 @@ export async function getHomeTopSection() {
 
   const data = await res.json();
 
+  console.log("📊 Latest posts count:", data?.data?.latest?.nodes?.length);
+  console.log("📊 Latest categories:", data?.data?.latest?.nodes?.map(p => p.categories?.nodes?.map(c => c.slug)));
+
   return {
     hero: data?.data?.hero?.nodes?.[0],
     latest: data?.data?.latest?.nodes || [],
     featured: data?.data?.featured?.nodes || [],
   };
+}
+
+
+// ✅ NEW FUNCTION: Breaking, Cover Story Top, News Big se data lao
+export async function getMiddleSectionPosts(limit = 11) {
+  const query = `
+    query GetMiddleSectionPosts {
+      breaking: posts(
+        first: ${limit},
+        where: { categoryName: "breaking", orderby: { field: DATE, order: DESC } }
+      ) {
+        nodes {
+          id
+          title
+          slug
+          date
+          featuredImage { node { sourceUrl } }
+          categories { nodes { name slug } }
+        }
+      }
+      coverStory: posts(
+        first: ${limit},
+        where: { categoryName: "cover-story-top", orderby: { field: DATE, order: DESC } }
+      ) {
+        nodes {
+          id
+          title
+          slug
+          date
+          featuredImage { node { sourceUrl } }
+          categories { nodes { name slug } }
+        }
+      }
+      newsBig: posts(
+        first: ${limit},
+        where: { categoryName: "news-big", orderby: { field: DATE, order: DESC } }
+      ) {
+        nodes {
+          id
+          title
+          slug
+          date
+          featuredImage { node { sourceUrl } }
+          categories { nodes { name slug } }
+        }
+      }
+    }
+  `;
+
+  try {
+    const res = await fetch(WPGRAPHQL_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query }),
+      next: { revalidate: 60 },
+    });
+
+    const data = await res.json();
+    
+    // Teen categories ko ek array mein merge kar do
+    const allPosts = [
+      ...(data?.data?.breaking?.nodes || []),
+      ...(data?.data?.coverStory?.nodes || []),
+      ...(data?.data?.newsBig?.nodes || [])
+    ];
+
+    return allPosts;
+  } catch (error) {
+    console.error('❌ Error fetching middle section posts:', error);
+    return [];
+  }
 }
 
 
